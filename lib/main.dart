@@ -86,6 +86,14 @@ class RushApp extends StatelessWidget {
           secondary: AppColors.gold,
         ),
         fontFamily: 'Roboto',
+        snackBarTheme: SnackBarThemeData(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: AppColors.navyDark,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          elevation: 10,
+        ),
       ),
       initialRoute: '/',
       onGenerateRoute: (settings) {
@@ -173,7 +181,7 @@ class RushApp extends StatelessWidget {
             );
           case '/vendor/dashboard':
             return MaterialPageRoute(
-              builder: (_) =>  VendorDashboardScreen(),
+              builder: (_) => VendorDashboardScreen(),
               settings: settings,
             );
           case '/vendor_ticket_workspace':

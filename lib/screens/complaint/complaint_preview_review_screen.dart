@@ -10,7 +10,8 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. TANGKAP SEMUA DATA DENGAN SELAMAT DARI SKRIN SEBELUM INI
     final Object? args = ModalRoute.of(context)?.settings.arguments;
-    Map<String, dynamic> dataAduan = (args != null) ? args as Map<String, dynamic> : {};
+    Map<String, dynamic> dataAduan =
+        (args != null) ? args as Map<String, dynamic> : {};
 
     // Mengambil data aduan yang diisi oleh pengguna
     String category = dataAduan['category'] ?? 'No Category';
@@ -33,7 +34,7 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,
             '/dashboard',
-                (route) => false,
+            (route) => false,
           ),
           icon: const Icon(Icons.close, size: 14, color: AppColors.navy),
           label: const Text('Close',
@@ -48,7 +49,8 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 18),
-                const Text('Submit a Complaint', style: AppTextStyles.cardTitle),
+                const Text('Submit a Complaint',
+                    style: AppTextStyles.cardTitle),
                 const SizedBox(height: 4),
                 const Text(
                   'Fill the details and your assigned department will attend to your request.',
@@ -59,7 +61,9 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                 const SizedBox(height: 22),
                 const Text('Review Your Complaint',
                     style: TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary)),
                 const SizedBox(height: 4),
                 const Text(
                   'Please check everything carefully before submitting.',
@@ -72,9 +76,13 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                 // === PAPARAN MAKLUMAT STAFF DINAMIK (DARI DATABASE) ===
                 Row(
                   children: [
-                    Expanded(child: ReviewField(label: 'Full Name', value: full_name)),
+                    Expanded(
+                        child:
+                            ReviewField(label: 'Full Name', value: full_name)),
                     const SizedBox(width: 16),
-                    Expanded(child: ReviewField(label: 'Email Address', value: email)),
+                    Expanded(
+                        child:
+                            ReviewField(label: 'Email Address', value: email)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -82,9 +90,14 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                 // === PAPARAN PHONE NUMBER & JABATAN DINAMIK (INPUT USER) ===
                 Row(
                   children: [
-                    Expanded(child: ReviewField(label: 'Phone Number', value: phoneNumber)),
+                    Expanded(
+                        child: ReviewField(
+                            label: 'Phone Number', value: phoneNumber)),
                     const SizedBox(width: 16),
-                    Expanded(child: ReviewField(label: 'My Department / Faculty', value: department)),
+                    Expanded(
+                        child: ReviewField(
+                            label: 'My Department / Faculty',
+                            value: department)),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -96,9 +109,12 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                 // === PAPARAN KATEGORI DINAMIK ===
                 Row(
                   children: [
-                    Expanded(child: ReviewField(label: 'Category', value: category)),
+                    Expanded(
+                        child: ReviewField(label: 'Category', value: category)),
                     const SizedBox(width: 16),
-                    Expanded(child: ReviewField(label: 'Assigned To', value: '$category Team')),
+                    Expanded(
+                        child: ReviewField(
+                            label: 'Assigned To', value: '$category Team')),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -118,7 +134,8 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 const InfoBanner(
                   tone: BannerTone.success,
-                  title: 'Working hours active — complaint will be attended to today.',
+                  title:
+                      'Working hours active — complaint will be attended to today.',
                 ),
                 const SizedBox(height: 26),
                 Row(
@@ -152,8 +169,10 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                             'full_name': full_name,
                             'email': email,
                             'attachment_path': attachmentName,
-                            'attached_file_bytes': dataAduan['attachment_file_bytes'],
-                            'attachment_file_path': dataAduan['attachment_file_path'],
+                            'attached_file_bytes':
+                                dataAduan['attachment_file_bytes'],
+                            'attachment_file_path':
+                                dataAduan['attachment_file_path'],
                           }); // Tutup skrin Fill sambil hantar data baharu ke senarai
                         } else {
                           // Jika aduan pertama (aliran biasa), pergi ke skrin Confirm macam biasa
@@ -168,14 +187,15 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                               'full_name': full_name,
                               'email': email,
                               'attachment_path': attachmentName,
-                              'attachment_file_bytes': dataAduan['attachment_file_bytes'],
-                              'attachment_file_path': dataAduan['attachment_file_path'],
+                              'attachment_file_bytes':
+                                  dataAduan['attachment_file_bytes'],
+                              'attachment_file_path':
+                                  dataAduan['attachment_file_path'],
                             },
                           );
                         }
                       },
                     ),
-
                   ],
                 ),
               ],

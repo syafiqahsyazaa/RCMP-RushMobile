@@ -24,7 +24,7 @@ class StaffLoginScreen extends StatelessWidget {
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,
             '/',
-                (route) => false,
+            (route) => false,
           ),
           icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.navy),
           label: const Text('Back to Home',
@@ -45,7 +45,8 @@ class StaffLoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   alignment: Alignment.center,
-                  child: const Icon(Icons.badge_outlined, color: AppColors.gold, size: 22),
+                  child: const Icon(Icons.badge_outlined,
+                      color: AppColors.gold, size: 22),
                 ),
                 const SizedBox(height: 6),
                 const Text('UNIKL RCMP', style: AppTextStyles.brand),
@@ -69,14 +70,15 @@ class StaffLoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 const Text('Sign in as operator? Go to your portal.',
-                    style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    style: TextStyle(
+                        fontSize: 12, color: AppColors.textSecondary)),
                 const SizedBox(height: 22),
                 MicrosoftButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       '/staff/dashboard',
-                          (route) => false,
+                      (route) => false,
                     );
                   },
                 ),
@@ -92,7 +94,10 @@ class StaffLoginScreen extends StatelessWidget {
                     // TODO: show email/password sign-in fallback.
                   },
                   child: const Text('Other login options',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary)),
                 ),
               ],
             ),

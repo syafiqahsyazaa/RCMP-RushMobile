@@ -25,8 +25,7 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   bool _isLoading = true;
-   String get _emailStaff => currentLoggedInUserEmail ?? "user@gmail.com";
-
+  String get _emailStaff => currentLoggedInUserEmail ?? "user@gmail.com";
 
   @override
   void initState() {
@@ -43,10 +42,10 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
     super.dispose();
   }
 
-
   Future<void> _ambilDataSubmissions() async {
     final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
-    final url = Uri.parse('http://$domain/helpdesk_api/get_my_submissions.php?email=${_emailStaff.trim()}');
+    final url = Uri.parse(
+        'http://$domain/helpdesk_api/get_my_submissions.php?email=${_emailStaff.trim()}');
 
     try {
       final respon = await http.get(url);
@@ -85,7 +84,6 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
     }
   }
 
-
   // filter function
   void _laksanakanCarian() {
     String kataKunci = _searchController.text.toLowerCase().trim();
@@ -97,9 +95,11 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
       } else {
         // Tapis berdasarkan Ticket ID, Title (Kategori), atau Submitter Name
         _filteredTickets = _listTickets.where((ticket) {
-          String ticketId = (ticket['ticket_id'] ?? '').toString().toLowerCase();
+          String ticketId =
+              (ticket['ticket_id'] ?? '').toString().toLowerCase();
           String title = (ticket['title'] ?? '').toString().toLowerCase();
-          String name = (ticket['submitter_name'] ?? '').toString().toLowerCase();
+          String name =
+              (ticket['submitter_name'] ?? '').toString().toLowerCase();
 
           return ticketId.contains(kataKunci) ||
               title.contains(kataKunci) ||
@@ -140,119 +140,138 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.navy),
         title: const Text('UniKL RCMP Help Desk',
-            style: TextStyle(color: AppColors.navy, fontSize: 14, fontWeight: FontWeight.w700)),
+            style: TextStyle(
+                color: AppColors.navy,
+                fontSize: 14,
+                fontWeight: FontWeight.w700)),
       ),
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEAF1FB),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: const Icon(Icons.description_outlined, color: Color(0xFF2F5FA3), size: 18),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                padding: const EdgeInsets.all(16),
+                children: [
+                  const SizedBox(height: 10),
+                  Row(
                     children: [
-                      const Text('My Submissions',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                      Text('All complaints  requests you have submitted.',
-                          style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                      Container(
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEAF1FB),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.description_outlined,
+                            color: Color(0xFF2F5FA3), size: 18),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('My Submissions',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimary)),
+                            Text('All complaints  requests you have submitted.',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary)),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: TextField(
+                      controller:
+                          _searchController, // Menyambungkan taipan ke controller carian
+                      style: const TextStyle(fontSize: 13),
+                      decoration: const InputDecoration(
+                        hintText: 'Search by ID, title or category',
+                        hintStyle:
+                            TextStyle(color: AppColors.textMuted, fontSize: 13),
+                        prefixIcon: Icon(Icons.search,
+                            size: 18, color: AppColors.textMuted),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
 
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.border),
+                  const SizedBox(height: 14),
+
+                  // Memaparkan jumlah dinamik tiket yang berjaya dijumpai hasil tapisan carian
+                  Text(
+                      'Showing ${_filteredTickets.length} of ${_listTickets.length} tickets',
+                      style: const TextStyle(
+                          fontSize: 11, color: AppColors.textMuted)),
+                  const SizedBox(height: 10),
+
+                  if (_filteredTickets.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 40),
+                      child: Center(
+                          child: Text('No matching tickets found.',
+                              style: TextStyle(
+                                  color: AppColors.textMuted, fontSize: 13))),
+                    ),
+
+                  ..._filteredTickets.map((ticket) {
+                    String currentStatus = ticket['status'] ?? 'open';
+
+                    String tarikhMentah = ticket['created_at'] ?? '';
+                    String tarikhDipapar = 'No Date';
+
+                    if (tarikhMentah.isNotEmpty && tarikhMentah.length >= 10) {
+                      String ymd = tarikhMentah.substring(
+                          0, 10); // Ambil Tahun-Bulan-Hari
+                      List<String> susunan = ymd.split('-');
+                      if (susunan.length == 3) {
+                        tarikhDipapar =
+                            "${susunan[2]}-${susunan[1]}-${susunan[0]}"; // Susun jadi Hari-Bulan-Tahun
+                      }
+                    }
+
+                    // Pulangkan terus tanpa balutan Padding tambahan
+                    return _ActivityRow(
+                      reference: ticket['ticket_id'] ?? 'No Reference',
+                      title: ticket['title'] ?? 'No Title Provided',
+                      department: tarikhDipapar,
+                      statusLabel: currentStatus == 'open'
+                          ? 'Open'
+                          : (currentStatus == 'in_progress'
+                              ? 'In Progress'
+                              : 'Closed'),
+                      statusColor: _getStatusColor(currentStatus),
+                      statusBg: _getStatusBg(currentStatus),
+                      onView: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/tickets/user-detail',
+                          arguments: ticket,
+                        );
+                      },
+                    );
+                  }),
+
+                  const SizedBox(height: 4),
+                  const Align(alignment: Alignment.centerRight),
+                ],
               ),
-              child: TextField(
-                controller: _searchController, // Menyambungkan taipan ke controller carian
-                style: const TextStyle(fontSize: 13),
-                decoration: const InputDecoration(
-                  hintText: 'Search by ID, title or category',
-                  hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
-                  prefixIcon: Icon(Icons.search, size: 18, color: AppColors.textMuted),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 14),
-
-            // Memaparkan jumlah dinamik tiket yang berjaya dijumpai hasil tapisan carian
-            Text('Showing ${_filteredTickets.length} of ${_listTickets.length} tickets',
-                style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-            const SizedBox(height: 10),
-
-            if (_filteredTickets.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 40),
-                child: Center(child: Text('No matching tickets found.', style: TextStyle(color: AppColors.textMuted, fontSize: 13))),
-              ),
-
-            ..._filteredTickets.map((ticket) {
-              String currentStatus = ticket['status'] ?? 'open';
-
-              String tarikhMentah = ticket['created_at'] ?? '';
-              String tarikhDipapar = 'No Date';
-
-              if (tarikhMentah.isNotEmpty && tarikhMentah.length >= 10) {
-                String ymd = tarikhMentah.substring(0, 10); // Ambil Tahun-Bulan-Hari
-                List<String> susunan = ymd.split('-');
-                if (susunan.length == 3) {
-                  tarikhDipapar = "${susunan[2]}-${susunan[1]}-${susunan[0]}"; // Susun jadi Hari-Bulan-Tahun
-                }
-              }
-
-              // Pulangkan terus tanpa balutan Padding tambahan
-              return _ActivityRow(
-                reference: ticket['ticket_id'] ?? 'No Reference',
-                title: ticket['title'] ?? 'No Title Provided',
-                department: tarikhDipapar,
-                statusLabel: currentStatus == 'open' ? 'Open' : (currentStatus == 'in_progress' ? 'In Progress' : 'Closed'),
-                statusColor: _getStatusColor(currentStatus),
-                statusBg: _getStatusBg(currentStatus),
-                onView: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/tickets/user-detail',
-                    arguments: ticket,
-                  );
-                },
-              );
-            }),
-
-
-
-            const SizedBox(height: 4),
-            const Align(alignment: Alignment.centerRight),
-          ],
-        ),
       ),
     );
   }
 }
-
 
 class _ActivityRow extends StatelessWidget {
   final String reference;
@@ -276,7 +295,8 @@ class _ActivityRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onView, // Membolehkan seluruh kawasan baris kad boleh diklik untuk ke detail page
+      onTap:
+          onView, // Membolehkan seluruh kawasan baris kad boleh diklik untuk ke detail page
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
@@ -296,7 +316,8 @@ class _ActivityRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.assignment_outlined, color: Color(0xFF2F5FA3), size: 18),
+              child: const Icon(Icons.assignment_outlined,
+                  color: Color(0xFF2F5FA3), size: 18),
             ),
             const SizedBox(width: 14),
 
@@ -323,14 +344,21 @@ class _ActivityRow extends StatelessWidget {
                     children: [
                       Text(
                         reference,
-                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textMuted,
+                            fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(width: 8),
-                      const Text('·', style: TextStyle(color: AppColors.textMuted, fontWeight: FontWeight.bold)),
+                      const Text('·',
+                          style: TextStyle(
+                              color: AppColors.textMuted,
+                              fontWeight: FontWeight.bold)),
                       const SizedBox(width: 8),
                       Text(
                         department, // Memaparkan tarikh pendek (cth: 19-08-2026)
-                        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                        style: const TextStyle(
+                            fontSize: 11, color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -344,20 +372,26 @@ class _ActivityRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: statusBg,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     statusLabel,
-                    style: TextStyle(fontSize: 10.5, color: statusColor, fontWeight: FontWeight.w700, letterSpacing: 0.3),
+                    style: TextStyle(
+                        fontSize: 10.5,
+                        color: statusColor,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3),
                   ),
                 ),
               ],
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios, size: 12, color: AppColors.textMuted),
+            const Icon(Icons.arrow_forward_ios,
+                size: 12, color: AppColors.textMuted),
           ],
         ),
       ),

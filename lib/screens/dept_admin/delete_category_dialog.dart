@@ -5,14 +5,15 @@ import 'dart:convert';
 import '../../theme/app_theme.dart';
 
 Future<void> showDeleteCategoryDialog(
-    BuildContext context, {
-      required String categoryId,
-      required String categoryName,
-    }) async {
+  BuildContext context, {
+  required String categoryId,
+  required String categoryName,
+}) async {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
-      return _DeleteCategoryDialogContent(categoryId: categoryId, categoryName: categoryName);
+      return _DeleteCategoryDialogContent(
+          categoryId: categoryId, categoryName: categoryName);
     },
   );
 }
@@ -21,13 +22,16 @@ class _DeleteCategoryDialogContent extends StatefulWidget {
   final String categoryId;
   final String categoryName;
 
-  const _DeleteCategoryDialogContent({required this.categoryId, required this.categoryName});
+  const _DeleteCategoryDialogContent(
+      {required this.categoryId, required this.categoryName});
 
   @override
-  State<_DeleteCategoryDialogContent> createState() => _DeleteCategoryDialogContentState();
+  State<_DeleteCategoryDialogContent> createState() =>
+      _DeleteCategoryDialogContentState();
 }
 
-class _DeleteCategoryDialogContentState extends State<_DeleteCategoryDialogContent> {
+class _DeleteCategoryDialogContentState
+    extends State<_DeleteCategoryDialogContent> {
   bool _isDeleting = false;
 
   Future<void> _padamKategoriDariDatabase() async {
@@ -47,10 +51,12 @@ class _DeleteCategoryDialogContentState extends State<_DeleteCategoryDialogConte
         if (hasil['status'] == 'berjaya') {
           if (mounted) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(hasil['mesej'])));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(hasil['mesej'])));
           }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(hasil['mesej'])));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(hasil['mesej'])));
         }
       }
     } catch (e) {
@@ -73,21 +79,33 @@ class _DeleteCategoryDialogContentState extends State<_DeleteCategoryDialogConte
           children: [
             Row(
               children: [
-                const Icon(Icons.delete_forever, color: Color(0xFFD64545), size: 22),
+                const Icon(Icons.delete_forever,
+                    color: Color(0xFFD64545), size: 22),
                 const SizedBox(width: 8),
-                const Text('Delete Category Track', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFD64545))),
+                const Text('Delete Category Track',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFD64545))),
                 const Spacer(),
-                IconButton(icon: const Icon(Icons.close, size: 18), onPressed: () => Navigator.pop(context)),
+                IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => Navigator.pop(context)),
               ],
             ),
             const Divider(),
             const SizedBox(height: 12),
             RichText(
               text: TextSpan(
-                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.4),
+                style: const TextStyle(
+                    fontSize: 13, color: AppColors.textPrimary, height: 1.4),
                 children: [
                   const TextSpan(text: 'Are you sure you want to delete '),
-                  TextSpan(text: widget.categoryName, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFD64545))),
+                  TextSpan(
+                      text: widget.categoryName,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFD64545))),
                   const TextSpan(text: '? This action cannot be undone.'),
                 ],
               ),
@@ -96,15 +114,22 @@ class _DeleteCategoryDialogContentState extends State<_DeleteCategoryDialogConte
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: Colors.grey))),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel',
+                        style: TextStyle(color: Colors.grey))),
                 const SizedBox(width: 10),
                 _isDeleting
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFD64545), foregroundColor: Colors.white),
-                  onPressed: _padamKategoriDariDatabase,
-                  child: const Text('Yes, Delete', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD64545),
+                            foregroundColor: Colors.white),
+                        onPressed: _padamKategoriDariDatabase,
+                        child: const Text('Yes, Delete',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold)),
+                      ),
               ],
             )
           ],

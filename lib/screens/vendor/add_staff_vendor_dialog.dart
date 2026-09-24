@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
 /// 🌟 FUNGSI PEMANGGIL GLOBAL DIALOG ADD STAFF VENDOR (NAMA BARU!) 🌟
-Future<void> showAddStaffVendorDialog(BuildContext context, VoidCallback onStaffAdded) {
+Future<void> showAddStaffVendorDialog(
+    BuildContext context, VoidCallback onStaffAdded) {
   return showDialog(
     context: context,
     builder: (context) => AddStaffVendorDialog(onStaffAdded: onStaffAdded),
@@ -41,49 +42,67 @@ class _AddStaffVendorDialogState extends State<AddStaffVendorDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Add Staff', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              const Text('Add Staff',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary)),
               const Divider(height: 20),
-
-              const Text('FULL NAME *', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const Text('FULL NAME *',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey)),
               const SizedBox(height: 6),
               TextFormField(
                 controller: _nameCtrl,
                 style: const TextStyle(fontSize: 12),
                 decoration: InputDecoration(
                   hintText: 'e.g. Ahmad Faisal',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
               ),
-
               const SizedBox(height: 14),
-              const Text('POSITION / JOB TITLE *', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+              const Text('POSITION / JOB TITLE *',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey)),
               const SizedBox(height: 6),
               TextFormField(
                 controller: _positionCtrl,
                 style: const TextStyle(fontSize: 12),
                 decoration: InputDecoration(
                   hintText: 'e.g. Network Technician',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
               ),
-
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel', style: TextStyle(color: Colors.black54)),
+                    child: const Text('Cancel',
+                        style: TextStyle(color: Colors.black54)),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A365D), foregroundColor: Colors.white),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1A365D),
+                        foregroundColor: Colors.white),
                     onPressed: () {
-                      if (_nameCtrl.text.isNotEmpty && _positionCtrl.text.isNotEmpty) {
+                      if (_nameCtrl.text.isNotEmpty &&
+                          _positionCtrl.text.isNotEmpty) {
                         Navigator.pop(context);
-                        widget.onStaffAdded(); // // TODO: Link database API hantaran data staff vendor
+                        widget
+                            .onStaffAdded(); // // TODO: Link database API hantaran data staff vendor
                       }
                     },
                     child: const Text('Save'),

@@ -11,10 +11,12 @@ class ComplaintSubmittedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // 1. TANGKAP SENARAI TIKET ID YANG DIHANTAR SELEPAS BERJAYA SUBMIT ALL
     final Object? args = ModalRoute.of(context)?.settings.arguments;
-    Map<String, dynamic> dataDiterima = (args != null && args is Map<String, dynamic>) ? args : {};
+    Map<String, dynamic> dataDiterima =
+        (args != null && args is Map<String, dynamic>) ? args : {};
 
     // Jika tiada data (contohnya akses terus), gunakan nombor contoh lalai
-    List<String> senaraiTiket = List<String>.from(dataDiterima['ticket_ids'] ?? ['RCMP-17082026-1']);
+    List<String> senaraiTiket =
+        List<String>.from(dataDiterima['ticket_ids'] ?? ['RCMP-17082026-1']);
 
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
@@ -33,11 +35,15 @@ class ComplaintSubmittedScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
-                  child: const Icon(Icons.check_circle, color: Color(0xFF2E9E52), size: 36),
+                  child: const Icon(Icons.check_circle,
+                      color: Color(0xFF2E9E52), size: 36),
                 ),
                 const SizedBox(height: 18),
                 const Text('All Submitted!',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary)),
                 const SizedBox(height: 6),
                 const Text(
                   'Your items have been received. Here are your reference numbers.',
@@ -79,11 +85,14 @@ class ComplaintSubmittedScreen extends StatelessWidget {
 
                           // 3. FUNGSI COPY NOMBOR RUJUKAN KE CLIPBOARD
                           IconButton(
-                            icon: const Icon(Icons.copy_outlined, size: 16, color: AppColors.textMuted),
+                            icon: const Icon(Icons.copy_outlined,
+                                size: 16, color: AppColors.textMuted),
                             onPressed: () {
                               Clipboard.setData(ClipboardData(text: ticketId));
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Copied reference number: $ticketId')),
+                                SnackBar(
+                                    content: Text(
+                                        'Copied reference number: $ticketId')),
                               );
                             },
                           ),
@@ -112,18 +121,20 @@ class ComplaintSubmittedScreen extends StatelessWidget {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               '/dashboard',
-                                  (route) => false,
+                              (route) => false,
                             );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.navy,
                             foregroundColor: Colors.white,
                             elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
                           ),
                           icon: const Icon(Icons.dashboard_outlined, size: 15),
                           label: const Text('Back to Dashboard',
-                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 13)),
                         ),
                       ),
                     ),

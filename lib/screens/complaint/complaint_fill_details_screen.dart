@@ -11,35 +11,37 @@ class ComplaintFillDetailsScreen extends StatefulWidget {
   const ComplaintFillDetailsScreen({super.key});
 
   @override
-  State<ComplaintFillDetailsScreen> createState() => _ComplaintFillDetailsScreenState();
+  State<ComplaintFillDetailsScreen> createState() =>
+      _ComplaintFillDetailsScreenState();
 }
 
-class _ComplaintFillDetailsScreenState extends State<ComplaintFillDetailsScreen> {
+class _ComplaintFillDetailsScreenState
+    extends State<ComplaintFillDetailsScreen> {
 // Pengurus data input dari kotak teks
-final TextEditingController _descriptionController = TextEditingController();
-final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
 // Status Tab Jabatan Terpilih (0 = IT, 1 = Maintenance, 2 = Admin)
-int _activeTab = 0;
-final List<String> _departmentsTabs = [
-'Information Technology',
-'Maintenance',
-'Admin & Facilities Mgmt'
-];
+  int _activeTab = 0;
+  final List<String> _departmentsTabs = [
+    'Information Technology',
+    'Maintenance',
+    'Admin & Facilities Mgmt'
+  ];
 
 // Senarai dinamik yang ditarik dari database Laragon
-List<String> _listCategories = [];
-List<String> _listDepartments = [];
+  List<String> _listCategories = [];
+  List<String> _listDepartments = [];
 
 // Menyimpan nilai pilihan dropdown pengguna
-String? _selectedCategory;
-String? _selectedDepartment;
+  String? _selectedCategory;
+  String? _selectedDepartment;
 
 // Mengurus fail lampiran gambar
-String _namaGambarSelected = 'No file attached';
-PlatformFile? _attachedFile;
+  String _namaGambarSelected = 'No file attached';
+  PlatformFile? _attachedFile;
 
-bool _isLoading = true;
+  bool _isLoading = true;
 
   // function: get data hantaran login dan auto-rolling tab live
   bool _isInitialized = false;
@@ -53,12 +55,14 @@ bool _isLoading = true;
       final Object? args = ModalRoute.of(context)?.settings.arguments;
 
       if (args != null && args is Map<String, dynamic>) {
-        String chosenDept = (args['selected_dept'] ?? 'it').toString().toLowerCase().trim();
+        String chosenDept =
+            (args['selected_dept'] ?? 'it').toString().toLowerCase().trim();
 
         // 2. AUTO-SET NILAI JABATAN IKUT KETUKAN USER DARI SKRIN DEPAN!
         if (chosenDept == 'maintenance') {
           _activeTab = 1; // Auto-pusing tukar skrin ke tab Maintenance!
-        } else if (chosenDept == 'administration & facilities' || chosenDept == 'admin') {
+        } else if (chosenDept == 'administration & facilities' ||
+            chosenDept == 'admin') {
           _activeTab = 2; // Auto-pusing tukar skrin ke tab Admin!
         } else {
           _activeTab = 0; // Kekal di tab IT
@@ -67,53 +71,55 @@ bool _isLoading = true;
         // 3. SELEPAS TUKAR TAB, WAJIB PAKSA ENJIN TARIK DATA DROPDOWN BARU DARI LARAGON!
         _ambilDataDropdown(_departmentsTabs[_activeTab]);
 
-        print("INDEKS TAB BORONG AUTO-DIKUNCI PADA: $_activeTab UNTUK JABATAN: $chosenDept");
+        print(
+            "INDEKS TAB BORONG AUTO-DIKUNCI PADA: $_activeTab UNTUK JABATAN: $chosenDept");
       }
       _isInitialized = true;
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
 
-@override
-void initState() {
-super.initState();
-}
-
-@override
-void dispose() {
-_descriptionController.dispose();
-_phoneNumberController.dispose();
-super.dispose();
-}
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
 
 // Fungsi memanggil API Laragon mengikut jabatan terpilih menggunakan kIsWeb IP dinamik
-Future<void> _ambilDataDropdown(String namaJabatan) async {
-setState(() => _isLoading = true);
+  Future<void> _ambilDataDropdown(String namaJabatan) async {
+    setState(() => _isLoading = true);
 
-final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
-final url = Uri.parse('http://$domain/helpdesk_api/get_dropdowns.php?department=$namaJabatan');
+    final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
+    final url = Uri.parse(
+        'http://$domain/helpdesk_api/get_dropdowns.php?department=$namaJabatan');
 
-try {
-final respon = await http.get(url);
+    try {
+      final respon = await http.get(url);
 
-if (respon.statusCode == 200) {
-final Map<String, dynamic> data = json.decode(respon.body);
+      if (respon.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(respon.body);
 
-setState(() {
-_listCategories = List<String>.from(data['categories']);
-_listDepartments = List<String>.from(data['departments']);
-_selectedCategory = null; // Reset pilihan kategori lama setiap kali tab berubah
-_isLoading = false;
-});
-} else {
-print("Gagal muat data dropdown. Status: ${respon.statusCode}");
-setState(() => _isLoading = false);
-}
-} catch (e) {
-print("Ralat sambungan ke Laragon: $e");
-setState(() => _isLoading = false);
-}
-}
+        setState(() {
+          _listCategories = List<String>.from(data['categories']);
+          _listDepartments = List<String>.from(data['departments']);
+          _selectedCategory =
+              null; // Reset pilihan kategori lama setiap kali tab berubah
+          _isLoading = false;
+        });
+      } else {
+        print("Gagal muat data dropdown. Status: ${respon.statusCode}");
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      print("Ralat sambungan ke Laragon: $e");
+      setState(() => _isLoading = false);
+    }
+  }
 
   // ===  SATU FUNGSI UNTUK SEMUA PLATFORM (WEB + MOBILE) ===
   Future<void> _pilihGambarFizikal() async {
@@ -144,9 +150,6 @@ setState(() => _isLoading = false);
     }
   }
 
-
-
-
 // kumpul data dan menghantar pengguna ke skrin Preview & Review
   void _hantarKePreview() {
     String description = _descriptionController.text.trim();
@@ -156,7 +159,9 @@ setState(() => _isLoading = false);
 
     if (category.isEmpty || description.isEmpty || department.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('SLA & policy — Sila isi semua ruangan yang wajib (*)!')),
+        const SnackBar(
+            content:
+                Text('SLA & policy — Sila isi semua ruangan yang wajib (*)!')),
       );
       return;
     }
@@ -172,11 +177,14 @@ setState(() => _isLoading = false);
 
     // Auto-jana nama depan yang kacak berasaskan text email sebelum abjad
     String safeLiveName = safeLiveEmail.contains('@')
-        ? safeLiveEmail.split('@')[0].toUpperCase().replaceAll('.', ' ').replaceAll('_', ' ')
+        ? safeLiveEmail
+            .split('@')[0]
+            .toUpperCase()
+            .replaceAll('.', ' ')
+            .replaceAll('_', ' ')
         : 'USER COMPLAINANT';
 
     String? pathFizikalSelamat = kIsWeb ? null : _attachedFile?.path;
-
 
     Map<String, dynamic> dataBorangBaru = {
       'category': category,
@@ -191,7 +199,8 @@ setState(() => _isLoading = false);
       'isAddAnother': isAddAnother,
       'attachment_path': _namaGambarSelected,
 
-      'attachment_file_bytes': _attachedFile?.bytes, // Untuk capture di Chrome Web
+      'attachment_file_bytes':
+          _attachedFile?.bytes, // Untuk capture di Chrome Web
       'attachment_file_path': kIsWeb ? null : _attachedFile?.path,
     };
 
@@ -202,8 +211,6 @@ setState(() => _isLoading = false);
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,9 +219,11 @@ setState(() => _isLoading = false);
         title: 'UNIKL RCMP',
         subtitle: 'Help Desk System',
         trailing: TextButton.icon(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false),
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+              context, '/dashboard', (route) => false),
           icon: const Icon(Icons.close, size: 14, color: AppColors.navy),
-          label: const Text('Close', style: TextStyle(color: AppColors.navy, fontSize: 12)),
+          label: const Text('Close',
+              style: TextStyle(color: AppColors.navy, fontSize: 12)),
         ),
       ),
       body: Center(
@@ -235,7 +244,8 @@ setState(() => _isLoading = false);
                 ),
                 const SizedBox(height: 18),
 
-                const Text('Submit a Complaint', style: AppTextStyles.cardTitle),
+                const Text('Submit a Complaint',
+                    style: AppTextStyles.cardTitle),
                 const SizedBox(height: 4),
                 Text(
                   'Fill the details and your assigned ${_departmentsTabs[_activeTab]} department will attend to your request.',
@@ -246,8 +256,10 @@ setState(() => _isLoading = false);
                 const SizedBox(height: 22),
                 const InfoBanner(
                   tone: BannerTone.success,
-                  title: 'SLA & policy — your complaint will be acknowledged shortly',
-                  subtitle: 'Open Mon–Fri, 8am–5pm  ·  Current average response: 24 hours',
+                  title:
+                      'SLA & policy — your complaint will be acknowledged shortly',
+                  subtitle:
+                      'Open Mon–Fri, 8am–5pm  ·  Current average response: 24 hours',
                 ),
                 const SizedBox(height: 24),
                 const SectionHeading(
@@ -259,21 +271,21 @@ setState(() => _isLoading = false);
                 // Dropdown Category Dinamik (Auto-filter ikut tab jabatan aktif)
                 _isLoading
                     ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(child: LinearProgressIndicator()),
-                )
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Center(child: LinearProgressIndicator()),
+                      )
                     : LabeledDropdown(
-                  label: 'Category',
-                  hint: 'Select Category',
-                  required: true,
-                  items: _listCategories,
-                  value: _selectedCategory,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _selectedCategory = newValue;
-                    });
-                  },
-                ),
+                        label: 'Category',
+                        hint: 'Select Category',
+                        required: true,
+                        items: _listCategories,
+                        value: _selectedCategory,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedCategory = newValue;
+                          });
+                        },
+                      ),
 
                 const SizedBox(height: 16),
 
@@ -293,7 +305,8 @@ setState(() => _isLoading = false);
                       maxLines: 4,
                       decoration: const InputDecoration(
                         hintText: 'Describe your issue here',
-                        hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                        hintStyle:
+                            TextStyle(color: AppColors.textMuted, fontSize: 13),
                         filled: true,
                         fillColor: AppColors.fieldBackground,
                         border: OutlineInputBorder(),
@@ -307,7 +320,9 @@ setState(() => _isLoading = false);
                   children: [
                     const Text('Attachment', style: AppTextStyles.fieldLabel),
                     const SizedBox(width: 6),
-                    Text('(optional)', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    Text('(optional)',
+                        style: TextStyle(
+                            fontSize: 11, color: AppColors.textMuted)),
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -318,7 +333,8 @@ setState(() => _isLoading = false);
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 12),
                     decoration: BoxDecoration(
                       color: AppColors.fieldBackground,
                       borderRadius: BorderRadius.circular(8),
@@ -327,17 +343,24 @@ setState(() => _isLoading = false);
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(_attachedFile != null ? Icons.image : Icons.cloud_upload_outlined,
-                            size: 20, color: AppColors.navy),
+                        Icon(
+                            _attachedFile != null
+                                ? Icons.image
+                                : Icons.cloud_upload_outlined,
+                            size: 20,
+                            color: AppColors.navy),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             _namaGambarSelected,
                             style: TextStyle(
                                 fontSize: 13,
-                                color: _attachedFile != null ? AppColors.navy : AppColors.textMuted,
-                                fontWeight: _attachedFile != null ? FontWeight.bold : FontWeight.normal
-                            ),
+                                color: _attachedFile != null
+                                    ? AppColors.navy
+                                    : AppColors.textMuted,
+                                fontWeight: _attachedFile != null
+                                    ? FontWeight.bold
+                                    : FontWeight.normal),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -361,8 +384,10 @@ setState(() => _isLoading = false);
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                         hintText: '+60 1X-XXXXXXX',
-                        hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
-                        prefixIcon: Icon(Icons.call_outlined, size: 18, color: AppColors.textMuted),
+                        hintStyle:
+                            TextStyle(color: AppColors.textMuted, fontSize: 13),
+                        prefixIcon: Icon(Icons.call_outlined,
+                            size: 18, color: AppColors.textMuted),
                         filled: true,
                         fillColor: AppColors.fieldBackground,
                         border: OutlineInputBorder(),
@@ -431,7 +456,8 @@ setState(() => _isLoading = false);
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       icon: Icon(icon, size: 16),
-      label: Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+      label: Text(title,
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
     );
   }
 }

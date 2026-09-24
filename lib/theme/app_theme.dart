@@ -67,8 +67,9 @@ class PortalTopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      bottom: false, // Kita matikan bottom supaya dia tidak kacau bahagian bawah skrin
-        child: Container(
+      bottom:
+          false, // Kita matikan bottom supaya dia tidak kacau bahagian bawah skrin
+      child: Container(
         height: preferredSize.height,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: const BoxDecoration(
@@ -105,13 +106,14 @@ class _Crest extends StatelessWidget {
       width: 60, // Besarkan sikit lebar untuk logo landscape
       height: 40,
       decoration: const BoxDecoration(
-        color: Colors.transparent, 
+        color: Colors.transparent,
       ),
       alignment: Alignment.centerLeft,
       child: Image.asset(
         'lib/assets/images/unikl_logo.png',
         fit: BoxFit.contain, // 🚀 KUNCI: Biar dia ikut ratio asal
-        errorBuilder: (context, error, stackTrace) => const Icon(Icons.shield_outlined, color: AppColors.gold, size: 18),
+        errorBuilder: (context, error, stackTrace) =>
+            const Icon(Icons.shield_outlined, color: AppColors.gold, size: 18),
       ),
     );
   }
@@ -177,7 +179,8 @@ class LabeledField extends StatelessWidget {
           style: const TextStyle(fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+            hintStyle:
+                const TextStyle(color: AppColors.textMuted, fontSize: 13),
             prefixIcon: Icon(icon, size: 18, color: AppColors.textMuted),
             suffixIcon: suffix,
             filled: true,
@@ -238,7 +241,8 @@ class PrimaryButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
+      padding:
+          width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
     );
 
     return SizedBox(
@@ -277,7 +281,8 @@ class MicrosoftButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
+          padding:
+              width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +352,8 @@ class RealSSOButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
+          padding:
+              width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
         ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -449,7 +455,12 @@ class StepTracker extends StatelessWidget {
 
   const StepTracker({super.key, required this.currentStep});
 
-  static const _labels = ['Fill Details', 'Preview & Review', 'Confirm', 'Submitted'];
+  static const _labels = [
+    'Fill Details',
+    'Preview & Review',
+    'Confirm',
+    'Submitted'
+  ];
   static const _icons = [
     Icons.description_outlined,
     Icons.visibility_outlined,
@@ -482,7 +493,9 @@ class StepTracker extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: (active || done) ? AppColors.navy : AppColors.fieldBackground,
+                color: (active || done)
+                    ? AppColors.navy
+                    : AppColors.fieldBackground,
                 border: Border.all(
                   color: (active || done) ? AppColors.navy : AppColors.border,
                 ),
@@ -604,7 +617,9 @@ class SectionHeading extends StatelessWidget {
       children: [
         Text(title,
             style: const TextStyle(
-                fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary)),
         if (subtitle != null) ...[
           const SizedBox(height: 2),
           Text(subtitle!, style: AppTextStyles.cardSubtitle),
@@ -619,16 +634,17 @@ class LabeledDropdown extends StatelessWidget {
   final String label;
   final String hint;
   final bool required;
-  final List<String> items;               // Ditambah untuk menerima data database
-  final String? value;                    // Ditambah untuk memegang nilai pilihan
-  final ValueChanged<String?>? onChanged; // Ditambah untuk mengesan klik pengguna
+  final List<String> items; // Ditambah untuk menerima data database
+  final String? value; // Ditambah untuk memegang nilai pilihan
+  final ValueChanged<String?>?
+      onChanged; // Ditambah untuk mengesan klik pengguna
 
   const LabeledDropdown({
     super.key,
     required this.label,
     required this.hint,
     this.required = false,
-    this.items = const [],                // Lalai (default) senarai kosong
+    this.items = const [], // Lalai (default) senarai kosong
     this.value,
     this.onChanged,
   });
@@ -643,16 +659,20 @@ class LabeledDropdown extends StatelessWidget {
             text: label,
             style: AppTextStyles.fieldLabel,
             children: required
-                ? const [TextSpan(text: ' *', style: TextStyle(color: Colors.red))]
+                ? const [
+                    TextSpan(text: ' *', style: TextStyle(color: Colors.red))
+                  ]
                 : null,
           ),
         ),
         const SizedBox(height: 6),
         DropdownButtonFormField<String>(
           value: value,
-          hint: Text(hint, style: const TextStyle(fontSize: 13, color: AppColors.textMuted)),
+          hint: Text(hint,
+              style: const TextStyle(fontSize: 13, color: AppColors.textMuted)),
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, size: 18, color: AppColors.textMuted),
+          icon: const Icon(Icons.keyboard_arrow_down,
+              size: 18, color: AppColors.textMuted),
           items: items.map((String item) {
             return DropdownMenuItem<String>(
               value: item,
@@ -663,7 +683,8 @@ class LabeledDropdown extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.fieldBackground,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: AppColors.border),
@@ -682,7 +703,6 @@ class LabeledDropdown extends StatelessWidget {
     );
   }
 }
-
 
 /// A labeled multiline text area (visual container over a TextField).
 class LabeledTextArea extends StatelessWidget {
@@ -707,7 +727,9 @@ class LabeledTextArea extends StatelessWidget {
             text: label,
             style: AppTextStyles.fieldLabel,
             children: required
-                ? const [TextSpan(text: ' *', style: TextStyle(color: Colors.red))]
+                ? const [
+                    TextSpan(text: ' *', style: TextStyle(color: Colors.red))
+                  ]
                 : null,
           ),
         ),
@@ -718,7 +740,8 @@ class LabeledTextArea extends StatelessWidget {
           style: const TextStyle(fontSize: 13),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+            hintStyle:
+                const TextStyle(color: AppColors.textMuted, fontSize: 13),
             filled: true,
             fillColor: AppColors.fieldBackground,
             contentPadding: const EdgeInsets.all(12),
@@ -757,10 +780,12 @@ class AttachmentUploadBox extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             children: [
-              const Icon(Icons.cloud_upload_outlined, color: AppColors.textMuted, size: 22),
+              const Icon(Icons.cloud_upload_outlined,
+                  color: AppColors.textMuted, size: 22),
               const SizedBox(height: 6),
               const Text('Drag your file, or browse',
-                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  style:
+                      TextStyle(fontSize: 12, color: AppColors.textSecondary)),
               const SizedBox(height: 2),
               const Text('PNG, JPG or PDF up to 10MB',
                   style: TextStyle(fontSize: 10, color: AppColors.textMuted)),
@@ -838,7 +863,9 @@ class ReviewField extends StatelessWidget {
         const SizedBox(height: 3),
         Text(value,
             style: const TextStyle(
-                fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary)),
       ],
     );
   }
@@ -867,7 +894,8 @@ class StatusTag extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: foreground),
+        style: TextStyle(
+            fontSize: 10, fontWeight: FontWeight.w700, color: foreground),
       ),
     );
   }
@@ -901,8 +929,13 @@ class SecondaryButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (icon != null) ...[Icon(icon, size: 15), const SizedBox(width: 6)],
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+            if (icon != null) ...[
+              Icon(icon, size: 15),
+              const SizedBox(width: 6)
+            ],
+            Text(label,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
           ],
         ),
       ),
@@ -939,8 +972,13 @@ class SuccessButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-            if (icon != null) ...[const SizedBox(width: 6), Icon(icon, size: 15)],
+            Text(label,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+            if (icon != null) ...[
+              const SizedBox(width: 6),
+              Icon(icon, size: 15)
+            ],
           ],
         ),
       ),
@@ -957,7 +995,8 @@ class SidebarNavItem {
   final String label;
   final String route;
 
-  const SidebarNavItem({required this.icon, required this.label, required this.route});
+  const SidebarNavItem(
+      {required this.icon, required this.label, required this.route});
 }
 
 /// Dark navy left-hand navigation sidebar used across the admin/staff
@@ -998,7 +1037,8 @@ class ConsoleSidebar extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   alignment: Alignment.center,
-                  child: const Icon(Icons.shield_outlined, color: AppColors.navyDark, size: 16),
+                  child: const Icon(Icons.shield_outlined,
+                      color: AppColors.navyDark, size: 16),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -1006,9 +1046,13 @@ class ConsoleSidebar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('UNIKL RCMP',
-                          style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700)),
                       Text(departmentLabel,
-                          style: const TextStyle(color: Colors.white54, fontSize: 9)),
+                          style: const TextStyle(
+                              color: Colors.white54, fontSize: 9)),
                     ],
                   ),
                 ),
@@ -1028,23 +1072,28 @@ class ConsoleSidebar extends StatelessWidget {
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         item.route,
-                            (route) => false,
+                        (route) => false,
                       );
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
-                    color: active ? Colors.white.withValues(alpha: 0.08) : Colors.transparent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 11),
+                    color: active
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : Colors.transparent,
                     child: Row(
                       children: [
                         Icon(item.icon,
-                            size: 16, color: active ? AppColors.gold : Colors.white54),
+                            size: 16,
+                            color: active ? AppColors.gold : Colors.white54),
                         const SizedBox(width: 10),
                         Text(item.label,
                             style: TextStyle(
                               fontSize: 12,
                               color: active ? Colors.white : Colors.white70,
-                              fontWeight: active ? FontWeight.w700 : FontWeight.w400,
+                              fontWeight:
+                                  active ? FontWeight.w700 : FontWeight.w400,
                             )),
                       ],
                     ),
@@ -1061,12 +1110,14 @@ class ConsoleSidebar extends StatelessWidget {
                 const CircleAvatar(
                   radius: 12,
                   backgroundColor: AppColors.gold,
-                  child: Icon(Icons.person, size: 14, color: AppColors.navyDark),
+                  child:
+                      Icon(Icons.person, size: 14, color: AppColors.navyDark),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(staffName,
-                      style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 11)),
                 ),
               ],
             ),
@@ -1100,7 +1151,9 @@ class StatCountCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: selected ? color : AppColors.border, width: selected ? 1.5 : 1),
+        border: Border.all(
+            color: selected ? color : AppColors.border,
+            width: selected ? 1.5 : 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1116,8 +1169,12 @@ class StatCountCard extends StatelessWidget {
             children: [
               Text(count,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Text(label, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary)),
+              Text(label,
+                  style: const TextStyle(
+                      fontSize: 10, color: AppColors.textSecondary)),
             ],
           ),
         ],
@@ -1149,13 +1206,18 @@ class ConsoleTopBar extends StatelessWidget {
             children: [
               Text(title,
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary)),
               if (subtitle.isNotEmpty)
-                Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                Text(subtitle,
+                    style: const TextStyle(
+                        fontSize: 11, color: AppColors.textSecondary)),
             ],
           ),
           const Spacer(),
-          const Icon(Icons.notifications_none, size: 18, color: AppColors.textSecondary),
+          const Icon(Icons.notifications_none,
+              size: 18, color: AppColors.textSecondary),
           const SizedBox(width: 14),
           const CircleAvatar(
             radius: 13,
@@ -1176,7 +1238,8 @@ class SimpleTable extends StatelessWidget {
   final List<List<Widget>> rows;
   final List<int>? flexes;
 
-  const SimpleTable({super.key, required this.columns, required this.rows, this.flexes});
+  const SimpleTable(
+      {super.key, required this.columns, required this.rows, this.flexes});
 
   @override
   Widget build(BuildContext context) {
@@ -1243,9 +1306,13 @@ class ViewLinkButton extends StatelessWidget {
         minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      icon: const Icon(Icons.visibility_outlined, size: 13, color: AppColors.navy),
+      icon: const Icon(Icons.visibility_outlined,
+          size: 13, color: AppColors.navy),
       label: const Text('View',
-          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.navy)),
+          style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.navy)),
     );
   }
 }
@@ -1275,6 +1342,65 @@ class CenteredModal extends StatelessWidget {
         ],
       ),
       child: child,
+    );
+  }
+}
+
+/// A gorgeous, modern floating SnackBar helper with icons and nice padding.
+class AppSnackBar {
+  static void show(
+    BuildContext context,
+    String message, {
+    bool isSuccess = true,
+    IconData? icon,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon ??
+                    (isSuccess
+                        ? Icons.check_circle_rounded
+                        : Icons.error_outline_rounded),
+                color: isSuccess ? AppColors.gold : Colors.redAccent,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.navyDark,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side:
+              BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        duration: duration,
+        elevation: 10,
+      ),
     );
   }
 }

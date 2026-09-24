@@ -54,7 +54,8 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
   //  FUNGSI fetch KATEGORI LIVE DARI DATABASE
   Future<void> _loadCategoriesDropdown() async {
     final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
-    final url = Uri.parse('http://$domain/helpdesk_api/get_dropdowns.php?email=$currentLoggedInUserEmail');
+    final url = Uri.parse(
+        'http://$domain/helpdesk_api/get_dropdowns.php?email=$currentLoggedInUserEmail');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -62,7 +63,8 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
         setState(() {
           _categoriesOptions = List<String>.from(data['categories'] ?? []);
           if (_categoriesOptions.isNotEmpty) {
-            _selectedCategory = _categoriesOptions.first; // Set item pertama sebagai default
+            _selectedCategory =
+                _categoriesOptions.first; // Set item pertama sebagai default
           }
         });
       }
@@ -72,7 +74,8 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
   }
 
   Future<void> _simpanStaffBaharu() async {
-    if (_codeController.text.trim().isEmpty || _nameController.text.trim().isEmpty) {
+    if (_codeController.text.trim().isEmpty ||
+        _nameController.text.trim().isEmpty) {
       _tampilMesej("Please fill in at least Staff Code and Full Name!");
       return;
     }
@@ -88,9 +91,13 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
         body: json.encode({
           "staff_code": _codeController.text.trim(),
           "full_name": _nameController.text.trim(),
-          "email": _emailController.text.trim().isEmpty ? "${_codeController.text.trim()}@unikl.edu.my" : _emailController.text.trim(),
+          "email": _emailController.text.trim().isEmpty
+              ? "${_codeController.text.trim()}@unikl.edu.my"
+              : _emailController.text.trim(),
           "phone": _phoneController.text.trim(),
-          "password": _passwordController.text.trim().isEmpty ? "password123" : _passwordController.text.trim(),
+          "password": _passwordController.text.trim().isEmpty
+              ? "password123"
+              : _passwordController.text.trim(),
           // HANTAR KATEGORI DIPILIH KE PHP
           "category": _selectedCategory ?? '',
           "admin_email": currentLoggedInUserEmail,
@@ -102,7 +109,8 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
         if (hasil['status'] == 'berjaya') {
           if (mounted) {
             Navigator.pop(context); // Tutup dialog
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(hasil['mesej'])));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(hasil['mesej'])));
           }
         } else {
           _tampilMesej(hasil['mesej'] ?? "Failed to insert record.");
@@ -136,30 +144,46 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Add New Staff Account', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
-                    IconButton(icon: const Icon(Icons.close, size: 18), onPressed: () => Navigator.pop(context)),
+                    const Text('Add New Staff Account',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy)),
+                    IconButton(
+                        icon: const Icon(Icons.close, size: 18),
+                        onPressed: () => Navigator.pop(context)),
                   ],
                 ),
                 const Divider(),
                 const SizedBox(height: 10),
 
                 // Staff Code Input
-                const Text('Staff Code *', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                const Text('Staff Code *',
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _codeController,
                   style: const TextStyle(fontSize: 12),
-                  decoration: const InputDecoration(hintText: 'e.g. 10099', contentPadding: EdgeInsets.all(10), border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                      hintText: 'e.g. 10099',
+                      contentPadding: EdgeInsets.all(10),
+                      border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 12),
 
                 // Full Name Input
-                const Text('Full Name *', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                const Text('Full Name *',
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _nameController,
                   style: const TextStyle(fontSize: 12),
-                  decoration: const InputDecoration(hintText: 'Full name as per ID', contentPadding: EdgeInsets.all(10), border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                      hintText: 'Full name as per ID',
+                      contentPadding: EdgeInsets.all(10),
+                      border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 12),
 
@@ -170,12 +194,17 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Email', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                          const Text('Email',
+                              style: TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _emailController,
                             style: const TextStyle(fontSize: 12),
-                            decoration: const InputDecoration(hintText: 'staff@unikl.edu.my', contentPadding: EdgeInsets.all(10), border: OutlineInputBorder()),
+                            decoration: const InputDecoration(
+                                hintText: 'staff@unikl.edu.my',
+                                contentPadding: EdgeInsets.all(10),
+                                border: OutlineInputBorder()),
                           ),
                         ],
                       ),
@@ -185,12 +214,17 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Phone', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                          const Text('Phone',
+                              style: TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 6),
                           TextFormField(
                             controller: _phoneController,
                             style: const TextStyle(fontSize: 12),
-                            decoration: const InputDecoration(hintText: 'e.g. 0127001007', contentPadding: EdgeInsets.all(10), border: OutlineInputBorder()),
+                            decoration: const InputDecoration(
+                                hintText: 'e.g. 0127001007',
+                                contentPadding: EdgeInsets.all(10),
+                                border: OutlineInputBorder()),
                           ),
                         ],
                       ),
@@ -200,13 +234,18 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
                 const SizedBox(height: 12),
 
                 // Password Input
-                const Text('Account Password *', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+                const Text('Account Password *',
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
                   style: const TextStyle(fontSize: 12),
-                  decoration: const InputDecoration(hintText: 'Default password handle', contentPadding: EdgeInsets.all(10), border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                      hintText: 'Default password handle',
+                      contentPadding: EdgeInsets.all(10),
+                      border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 14),
 
@@ -215,9 +254,13 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
                   label: 'Assign Operational Track Category *',
                   hint: _selectedCategory ?? 'Select track track',
                   items: _categoriesOptions,
-                  value: _categoriesOptions.contains(_selectedCategory) ? _selectedCategory : null,
+                  value: _categoriesOptions.contains(_selectedCategory)
+                      ? _selectedCategory
+                      : null,
                   onChanged: (v) {
-                    setState(() { _selectedCategory = v; });
+                    setState(() {
+                      _selectedCategory = v;
+                    });
                   },
                 ),
                 const SizedBox(height: 22),
@@ -227,16 +270,21 @@ class _AddStaffDialogContentState extends State<_AddStaffDialogContent> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      child: const Text('Cancel',
+                          style: TextStyle(color: Colors.grey, fontSize: 12)),
                     ),
                     const SizedBox(width: 10),
                     _isSaving
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.navy, foregroundColor: Colors.white),
-                      onPressed: _simpanStaffBaharu,
-                      child: const Text('Add Staff Account', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                    ),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.navy,
+                                foregroundColor: Colors.white),
+                            onPressed: _simpanStaffBaharu,
+                            child: const Text('Add Staff Account',
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold)),
+                          ),
                   ],
                 )
               ],

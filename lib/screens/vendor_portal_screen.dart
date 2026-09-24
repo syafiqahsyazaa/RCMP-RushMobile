@@ -37,7 +37,9 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
 
     if (emailText.isEmpty || passwordText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in both Company Email and Password columns !')),
+        const SnackBar(
+            content: Text(
+                'Please fill in both Company Email and Password columns !')),
       );
       return;
     }
@@ -66,7 +68,8 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
         final Map<String, dynamic> hasil = json.decode(respon.body);
 
         if (hasil['status'] == 'success') {
-          Map<String, dynamic> vendorProfile = Map<String, dynamic>.from(hasil['data'] ?? {});
+          Map<String, dynamic> vendorProfile =
+              Map<String, dynamic>.from(hasil['data'] ?? {});
 
           // =========================================================================
           //  KEMASKINI: SELARASKAN DATA TYPE FIRST_LOGIN
@@ -81,8 +84,7 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 backgroundColor: Colors.green,
-                content: Text('Vendor Authentication successfully verified!')
-            ),
+                content: Text('Vendor Authentication successfully verified!')),
           );
 
           // : Meluncur lurus tanpa sekatan ke pintu portal vendor dashboard!
@@ -92,14 +94,16 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
             arguments: vendorProfile,
           );
         } else {
-          _pamerAmaranMesej(hasil['message'] ?? 'Invalid credential combination murni.');
+          _pamerAmaranMesej(
+              hasil['message'] ?? 'Invalid credential combination murni.');
         }
       } else {
         _pamerAmaranMesej('Server Response Error: Status ${respon.statusCode}');
       }
     } catch (e) {
       print("Ralat sambungan login vendor: $e");
-      _pamerAmaranMesej('Connection failure to Laragon server. Please check your Apache connection murni.');
+      _pamerAmaranMesej(
+          'Connection failure to Laragon server. Please check your Apache connection murni.');
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -123,9 +127,11 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
         title: 'UNIKL RCMP',
         subtitle: 'RUSH — Vendor Portal',
         trailing: TextButton.icon(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false),
+          onPressed: () =>
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false),
           icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.navy),
-          label: const Text('Back to Home', style: TextStyle(color: AppColors.navy, fontSize: 12)),
+          label: const Text('Back to Home',
+              style: TextStyle(color: AppColors.navy, fontSize: 12)),
         ),
       ),
       body: Center(
@@ -136,8 +142,11 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 80, height: 60,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                  width: 80,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
                   alignment: Alignment.center,
                   child: Image.asset(
                     'lib/assets/images/unikl_logo.png',
@@ -146,9 +155,12 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
                     errorBuilder: (context, error, stackTrace) => Container(
                       width: 34,
                       height: 34,
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6)),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6)),
                       alignment: Alignment.center,
-                      child: const Icon(Icons.broken_image_outlined, color: Colors.red, size: 18),
+                      child: const Icon(Icons.broken_image_outlined,
+                          color: Colors.red, size: 18),
                     ),
                   ),
                 ),
@@ -160,14 +172,21 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
                   text: const TextSpan(
                     children: [
                       TextSpan(text: 'Vendor ', style: AppTextStyles.cardTitle),
-                      TextSpan(text: 'Access', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic, color: AppColors.gold)),
+                      TextSpan(
+                          text: 'Access',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                              color: AppColors.gold)),
                     ],
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text('Sign in to manage your assigned work orders.', style: AppTextStyles.cardSubtitle, textAlign: TextAlign.center),
+                const Text('Sign in to manage your assigned work orders.',
+                    style: AppTextStyles.cardSubtitle,
+                    textAlign: TextAlign.center),
                 const SizedBox(height: 24),
-
                 LabeledField(
                   label: 'Company Email',
                   hint: 'vendor@company.com',
@@ -175,7 +194,6 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
                   controller: _emailController,
                 ),
                 const SizedBox(height: 16),
-
                 LabeledField(
                   label: 'Password',
                   hint: 'Enter your password',
@@ -184,8 +202,11 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
                   controller: _passwordController,
                   suffix: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      size: 18, color: AppColors.textMuted,
+                      _obscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      size: 18,
+                      color: AppColors.textMuted,
                     ),
                     onPressed: () {
                       setState(() => _obscurePassword = !_obscurePassword);
@@ -193,21 +214,23 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
                   ),
                 ),
                 const SizedBox(height: 22),
-
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : PrimaryButton(
-                  label: 'Sign In',
-                  icon: Icons.arrow_forward,
-                  onPressed: _prosesLoginVendorLive,
-                ),
+                        label: 'Sign In',
+                        icon: Icons.arrow_forward,
+                        onPressed: _prosesLoginVendorLive,
+                      ),
                 const SizedBox(height: 18),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.help_outline, size: 14, color: AppColors.textMuted),
+                    Icon(Icons.help_outline,
+                        size: 14, color: AppColors.textMuted),
                     SizedBox(width: 6),
-                    Text('Need help? Contact 03-142  |  142 / 140', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                    Text('Need help? Contact 03-142  |  142 / 140',
+                        style: TextStyle(
+                            fontSize: 11, color: AppColors.textMuted)),
                   ],
                 ),
               ],

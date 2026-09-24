@@ -38,13 +38,15 @@ class HelpdeskHomeScreen extends StatelessWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Icon(Icons.directions_run, color: AppColors.gold, size: 34),
+                        Icon(Icons.directions_run,
+                            color: AppColors.gold, size: 34),
                         SizedBox(width: 8),
                         Text(
                           'USH',
@@ -225,7 +227,8 @@ class _BottomStatusBar extends StatelessWidget {
         children: [
           _buildStatusItem(Icons.access_time, 'Mon - Sun · 8am - 5pm'),
           _buildStatusItem(Icons.call_outlined, 'Ext. 142 / 140'),
-          _buildStatusItem(Icons.list_alt_outlined, 'Real-time Ticket Tracking'),
+          _buildStatusItem(
+              Icons.list_alt_outlined, 'Real-time Ticket Tracking'),
           const Text(
             '© 2025 UniKL RCMP · RUSH  |  User Manual',
             style: TextStyle(color: Colors.white38, fontSize: 10),

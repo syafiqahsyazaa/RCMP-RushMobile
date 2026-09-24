@@ -5,10 +5,12 @@ import 'dart:convert';
 import '../../theme/app_theme.dart';
 
 // Fungsi utama untuk memanggil kotak pop-up dari mana-mana skrin user
-Future<bool?> showUserFeedbackPopup(BuildContext context, {required String ticketId}) async {
+Future<bool?> showUserFeedbackPopup(BuildContext context,
+    {required String ticketId}) async {
   return showDialog<bool>(
     context: context,
-    barrierDismissible: false, // Paksa user isi atau tekan cancel (tidak boleh klik luar kotak)
+    barrierDismissible:
+        false, // Paksa user isi atau tekan cancel (tidak boleh klik luar kotak)
     builder: (BuildContext context) {
       return _FeedbackPopupContent(ticketId: ticketId);
     },
@@ -47,7 +49,8 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
   Future<void> _submitFeedback() async {
     setState(() => _isSaving = true);
     final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
-    final url = Uri.parse('http://$domain/helpdesk_api/add_ticket_feedback.php');
+    final url =
+        Uri.parse('http://$domain/helpdesk_api/add_ticket_feedback.php');
 
     try {
       final response = await http.post(
@@ -64,12 +67,15 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> resData = json.decode(response.body);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(resData['mesej'] ?? 'Thank you!')));
-          Navigator.pop(context, true); // Tutup pop-up dan pulangkan nilai 'true' untuk refresh skrin asal
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(resData['mesej'] ?? 'Thank you!')));
+          Navigator.pop(context,
+              true); // Tutup pop-up dan pulangkan nilai 'true' untuk refresh skrin asal
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Network error: $e")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Network error: $e")));
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -84,7 +90,8 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
         width: 420, // Lebar kotak pop-up yang sangat ngam dan seimbang
         padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Paksa kotak mengikut ketinggian kandungan sahaja
+          mainAxisSize: MainAxisSize
+              .min, // Paksa kotak mengikut ketinggian kandungan sahaja
           children: [
             // Header Pop-up
             Row(
@@ -92,9 +99,14 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.rate_review_outlined, color: AppColors.navy, size: 20),
+                    Icon(Icons.rate_review_outlined,
+                        color: AppColors.navy, size: 20),
                     SizedBox(width: 8),
-                    Text('Rate Our Support', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
+                    Text('Rate Our Support',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.navy)),
                   ],
                 ),
                 IconButton(
@@ -106,13 +118,22 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
             const Divider(),
             const SizedBox(height: 10),
 
-            const Text('How was your complaint resolution experience?', textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+            const Text('How was your complaint resolution experience?',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
             const SizedBox(height: 20),
 
             // 💡 EMOTICON DIAL LIVE: Berubah saiz dan rupa mengikut ketukan bintang 💡
-            Text(_emojis[_selectedRating - 1], style: const TextStyle(fontSize: 54)),
+            Text(_emojis[_selectedRating - 1],
+                style: const TextStyle(fontSize: 54)),
             const SizedBox(height: 6),
-            Text(_labels[_selectedRating - 1], style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: _selectedRating >= 4 ? const Color(0xFF2E9E52) : const Color(0xFFC9A227))),
+            Text(_labels[_selectedRating - 1],
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: _selectedRating >= 4
+                        ? const Color(0xFF2E9E52)
+                        : const Color(0xFFC9A227))),
             const SizedBox(height: 16),
 
             // Barisan Bintang Kuning Interaktif
@@ -139,7 +160,11 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
             // Ruangan Input Komen Teks
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text('Write a comment (Optional)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              child: Text('Write a comment (Optional)',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary)),
             ),
             const SizedBox(height: 6),
             TextFormField(
@@ -149,7 +174,8 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
               decoration: InputDecoration(
                 hintText: 'Share your thoughts with us...',
                 contentPadding: const EdgeInsets.all(10),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 filled: true,
                 fillColor: AppColors.pageBackground,
               ),
@@ -162,16 +188,28 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Maybe Later', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  child: const Text('Maybe Later',
+                      style: TextStyle(color: Colors.grey, fontSize: 12)),
                 ),
                 const SizedBox(width: 10),
                 _isSaving
-                    ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2.5))
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2.5))
                     : ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.navy, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
-                  onPressed: _submitFeedback,
-                  child: const Text('Submit Feedback', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.navy,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        onPressed: _submitFeedback,
+                        child: const Text('Submit Feedback',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold)),
+                      ),
               ],
             )
           ],

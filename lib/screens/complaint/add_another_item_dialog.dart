@@ -38,11 +38,15 @@ class AddAnotherItemDialog extends StatelessWidget {
               children: [
                 const Expanded(
                   child: Text('Add Another Item',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary)),
                 ),
                 InkWell(
                   onTap: () => Navigator.pop(context),
-                  child: const Icon(Icons.close, size: 18, color: AppColors.textMuted),
+                  child: const Icon(Icons.close,
+                      size: 18, color: AppColors.textMuted),
                 ),
               ],
             ),
@@ -53,7 +57,11 @@ class AddAnotherItemDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text('CHOOSE DEPARTMENT',
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.4)),
+                style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMuted,
+                    letterSpacing: 0.4)),
             const SizedBox(height: 10),
             _DeptOption(
               icon: Icons.computer,
@@ -125,7 +133,10 @@ class _DeptOption extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(label,
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: color)),
+                  style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: color)),
             ),
           ],
         ),

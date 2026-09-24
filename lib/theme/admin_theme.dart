@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'app_theme.dart';
 import '../main.dart';
 
-
 /// Extra design tokens + shared widgets for the Admin (IT Department) and
 /// Staff portals. Kept separate from app_theme.dart to keep files focused;
 /// screens import both.
@@ -30,8 +29,8 @@ class PortalNavDrawer extends StatelessWidget {
     required this.departmentLabel,
     required this.currentRoute,
     required this.items,
-    this.fullName,  // 🔒 Optional! Tidak wajib diisi oleh skrin luar!
-    this.role,      // 🔒 Optional! Tidak wajib diisi oleh skrin luar!
+    this.fullName, // 🔒 Optional! Tidak wajib diisi oleh skrin luar!
+    this.role, // 🔒 Optional! Tidak wajib diisi oleh skrin luar!
     this.staffName = "", // 🚀 Default to empty to allow proper fallback logic!
   });
 
@@ -56,13 +55,17 @@ class PortalNavDrawer extends StatelessWidget {
                     child: Image.asset(
                       'lib/assets/images/unikl_logo.png',
                       width: 50, // Kita besarkan sikit lebar dia murni
-                      fit: BoxFit.contain, // 🚀 KUNCI: Guna contain supaya tak penyek!
+                      fit: BoxFit
+                          .contain, // 🚀 KUNCI: Guna contain supaya tak penyek!
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: 34,
                         height: 34,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6)),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(6)),
                         alignment: Alignment.center,
-                        child: const Icon(Icons.broken_image_outlined, color: Colors.red, size: 18),
+                        child: const Icon(Icons.broken_image_outlined,
+                            color: Colors.red, size: 18),
                       ),
                     ),
                   ),
@@ -72,9 +75,13 @@ class PortalNavDrawer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('UniKL RCMP',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12)),
                         Text(departmentLabel,
-                            style: const TextStyle(color: Colors.white60, fontSize: 10)),
+                            style: const TextStyle(
+                                color: Colors.white60, fontSize: 10)),
                       ],
                     ),
                   ),
@@ -90,29 +97,48 @@ class PortalNavDrawer extends StatelessWidget {
                   final active = item.route == currentRoute;
                   return ListTile(
                     leading: Icon(item.icon,
-                        size: 19, color: active ? AppColors.gold : Colors.white70),
+                        size: 19,
+                        color: active ? AppColors.gold : Colors.white70),
                     title: Text(item.label,
                         style: TextStyle(
                           fontSize: 13,
                           color: active ? Colors.white : Colors.white70,
-                          fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                          fontWeight:
+                              active ? FontWeight.w700 : FontWeight.w500,
                         )),
-                      tileColor: active ? Colors.white.withValues(alpha: 0.06) : null,
-                      onTap: () {
-                        Navigator.pop(context); // close drawer
-                        if (!active) {
-                          Navigator.pushReplacementNamed(
-                              context,
-                              item.route,
-                              // 🚀 SUNTIKAN UTAMA: Kita pass bungkusan arguments tulin yang dipegang oleh constructor drawer!
-                              arguments: {
-                                "email": ((ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['email'] ?? currentLoggedInUserEmail).toString(),
-                                "full_name": staffName.isNotEmpty ? staffName : (((ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['full_name'] ?? (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['name'] ?? fullName) ?? "User UniKL"),
-                                "role": role ?? "Admin",
-                                "departmentLabel": departmentLabel, // 🔒 FIX DYNAMIC: Kita hantar label jabatan ke skrin seterusnya!
-                              }
-                          );
-                        }
+                    tileColor:
+                        active ? Colors.white.withValues(alpha: 0.06) : null,
+                    onTap: () {
+                      Navigator.pop(context); // close drawer
+                      if (!active) {
+                        Navigator.pushReplacementNamed(context, item.route,
+                            // 🚀 SUNTIKAN UTAMA: Kita pass bungkusan arguments tulin yang dipegang oleh constructor drawer!
+                            arguments: {
+                              "email": ((ModalRoute.of(context)
+                                              ?.settings
+                                              .arguments
+                                          as Map<String, dynamic>?)?['email'] ??
+                                      currentLoggedInUserEmail)
+                                  .toString(),
+                              "full_name": staffName.isNotEmpty
+                                  ? staffName
+                                  : (((ModalRoute.of(context)
+                                                      ?.settings
+                                                      .arguments
+                                                  as Map<String, dynamic>?)?[
+                                              'full_name'] ??
+                                          (ModalRoute.of(context)
+                                                      ?.settings
+                                                      .arguments
+                                                  as Map<String, dynamic>?)?[
+                                              'name'] ??
+                                          fullName) ??
+                                      "User UniKL"),
+                              "role": role ?? "Admin",
+                              "departmentLabel":
+                                  departmentLabel, // 🔒 FIX DYNAMIC: Kita hantar label jabatan ke skrin seterusnya!
+                            });
+                      }
                     },
                   );
                 }).toList(),
@@ -138,11 +164,22 @@ class PortalNavDrawer extends StatelessWidget {
                     backgroundColor: const Color(0xFF3B82F6),
                     child: Text(
                       ((staffName.isNotEmpty)
-                          ? staffName
-                          : (((ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['full_name'] ??
-                             (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['name'] ??
-                             fullName) ?? 'U')).substring(0, 1).toUpperCase(),
-                      style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                              ? staffName
+                              : (((ModalRoute.of(context)?.settings.arguments
+                                              as Map<String, dynamic>?)?[
+                                          'full_name'] ??
+                                      (ModalRoute.of(context)
+                                              ?.settings
+                                              .arguments
+                                          as Map<String, dynamic>?)?['name'] ??
+                                      fullName) ??
+                                  'U'))
+                          .substring(0, 1)
+                          .toUpperCase(),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -157,10 +194,20 @@ class PortalNavDrawer extends StatelessWidget {
                           // 🚀 FIX MUKTAMAD: Cuba cari nama dari 3 sumber: staffName -> Route Arguments -> fullName
                           (staffName.isNotEmpty)
                               ? staffName
-                              : (((ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['full_name'] ??
-                                 (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)?['name'] ??
-                                 fullName) ?? 'User UniKL'),
-                          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 0.3),
+                              : (((ModalRoute.of(context)?.settings.arguments
+                                              as Map<String, dynamic>?)?[
+                                          'full_name'] ??
+                                      (ModalRoute.of(context)
+                                              ?.settings
+                                              .arguments
+                                          as Map<String, dynamic>?)?['name'] ??
+                                      fullName) ??
+                                  'User UniKL'),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.3),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -174,7 +221,10 @@ class PortalNavDrawer extends StatelessWidget {
                           (role != null && role!.trim().isNotEmpty)
                               ? role!.trim()
                               : 'Staff', // Fallback default jika screen luar terlupa suap parameter murni!
-                          style: const TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              color: Colors.white60,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -182,12 +232,15 @@ class PortalNavDrawer extends StatelessWidget {
 
                   // 🚪 Butang Ikon Pintu Sign Out
                   IconButton(
-                    icon: const Icon(Icons.logout_rounded, color: Colors.white60, size: 16),
+                    icon: const Icon(Icons.logout_rounded,
+                        color: Colors.white60, size: 16),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                     onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context, '/helpdesk_home_screen', (route) => false);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Logged out successfully.')));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/helpdesk_home_screen', (route) => false);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Logged out successfully.')));
                     },
                   ),
                 ],
@@ -232,7 +285,9 @@ class StatMiniCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: selected ? color : AppColors.border, width: selected ? 1.4 : 1),
+          border: Border.all(
+              color: selected ? color : AppColors.border,
+              width: selected ? 1.4 : 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,9 +295,14 @@ class StatMiniCard extends StatelessWidget {
             Icon(icon, size: 10, color: color),
             const SizedBox(height: 8),
             Text(value,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+            Text(label,
+                style: const TextStyle(
+                    fontSize: 10, color: AppColors.textSecondary)),
           ],
         ),
       ),
@@ -273,7 +333,9 @@ class PriorityChip extends StatelessWidget {
       children: [
         Icon(Icons.flag, size: 11, color: color),
         const SizedBox(width: 4),
-        Text(priority, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+        Text(priority,
+            style: TextStyle(
+                fontSize: 11, fontWeight: FontWeight.w600, color: color)),
       ],
     );
   }
@@ -322,19 +384,28 @@ class TicketCard extends StatelessWidget {
           Row(
             children: [
               Text(ticketId,
-                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textMuted)),
+                  style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textMuted)),
               const Spacer(),
-              StatusTag(label: status, background: statusBg, foreground: statusColor),
+              StatusTag(
+                  label: status, background: statusBg, foreground: statusColor),
             ],
           ),
           const SizedBox(height: 6),
           Text(title,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary)),
           const SizedBox(height: 4),
           Text('$submittedBy · $department',
-              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              style: const TextStyle(
+                  fontSize: 11, color: AppColors.textSecondary)),
           const SizedBox(height: 2),
-          Text(category, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+          Text(category,
+              style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -347,10 +418,13 @@ class TicketCard extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.navy,
                     side: const BorderSide(color: AppColors.navy),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
-                  child: const Text('View', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+                  child: const Text('View',
+                      style:
+                          TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
                 ),
               ),
             ],
@@ -364,7 +438,8 @@ class TicketCard extends StatelessWidget {
 /// A search box + filter row, visual only (no filtering logic wired).
 class SearchFilterBar extends StatelessWidget {
   final String hint;
-  const SearchFilterBar({super.key, this.hint = 'Search by ID, title or category'});
+  const SearchFilterBar(
+      {super.key, this.hint = 'Search by ID, title or category'});
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +457,9 @@ class SearchFilterBar extends StatelessWidget {
               const Icon(Icons.search, size: 16, color: AppColors.textMuted),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(hint, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                child: Text(hint,
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.textMuted)),
               ),
             ],
           ),
@@ -417,10 +494,12 @@ class _FilterChipBox extends StatelessWidget {
         children: [
           Expanded(
             child: Text(label,
-                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                style: const TextStyle(
+                    fontSize: 11, color: AppColors.textSecondary),
                 overflow: TextOverflow.ellipsis),
           ),
-          const Icon(Icons.keyboard_arrow_down, size: 16, color: AppColors.textMuted),
+          const Icon(Icons.keyboard_arrow_down,
+              size: 16, color: AppColors.textMuted),
         ],
       ),
     );
@@ -458,12 +537,14 @@ class SimpleBarChart extends StatelessWidget {
                     height: (height - 30) * entry.value.clamp(0.02, 1.0),
                     decoration: BoxDecoration(
                       color: colors[i % colors.length],
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(4)),
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(entry.key,
-                      style: const TextStyle(fontSize: 9, color: AppColors.textSecondary),
+                      style: const TextStyle(
+                          fontSize: 9, color: AppColors.textSecondary),
                       textAlign: TextAlign.center),
                 ],
               ),
@@ -495,7 +576,8 @@ class SimpleDonutChart extends StatelessWidget {
       width: size,
       height: size,
       child: CustomPaint(
-        painter: _DonutPainter(slices: slices, colors: colors, total: total <= 0 ? 1 : total),
+        painter: _DonutPainter(
+            slices: slices, colors: colors, total: total <= 0 ? 1 : total),
       ),
     );
   }
@@ -506,7 +588,8 @@ class _DonutPainter extends CustomPainter {
   final List<Color> colors;
   final double total;
 
-  _DonutPainter({required this.slices, required this.colors, required this.total});
+  _DonutPainter(
+      {required this.slices, required this.colors, required this.total});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -549,9 +632,15 @@ class ChartLegend extends StatelessWidget {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 8, height: 8, decoration: BoxDecoration(color: e.value, shape: BoxShape.circle)),
+            Container(
+                width: 8,
+                height: 8,
+                decoration:
+                    BoxDecoration(color: e.value, shape: BoxShape.circle)),
             const SizedBox(width: 5),
-            Text(e.key, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+            Text(e.key,
+                style: const TextStyle(
+                    fontSize: 10, color: AppColors.textSecondary)),
           ],
         );
       }).toList(),
@@ -594,13 +683,18 @@ class DataRowCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(title,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                    style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary)),
               ),
               if (trailingTag != null) trailingTag!,
             ],
           ),
           const SizedBox(height: 3),
-          Text(subtitle, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+          Text(subtitle,
+              style: const TextStyle(
+                  fontSize: 11, color: AppColors.textSecondary)),
           if (fields.isNotEmpty) ...[
             const SizedBox(height: 10),
             Wrap(
@@ -640,9 +734,12 @@ class IconTextAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: onTap,
-      style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8)),
+      style: TextButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 8)),
       icon: Icon(icon, size: 14, color: color),
-      label: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+      label: Text(label,
+          style: TextStyle(
+              fontSize: 11, fontWeight: FontWeight.w600, color: color)),
     );
   }
 }

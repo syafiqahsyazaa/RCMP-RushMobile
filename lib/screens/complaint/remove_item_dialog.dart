@@ -34,13 +34,18 @@ class RemoveItemDialog extends StatelessWidget {
             Container(
               width: 52,
               height: 52,
-              decoration: const BoxDecoration(color: Color(0xFFFCEAEA), shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                  color: Color(0xFFFCEAEA), shape: BoxShape.circle),
               alignment: Alignment.center,
-              child: const Icon(Icons.close, color: Color(0xFFD64545), size: 26),
+              child:
+                  const Icon(Icons.close, color: Color(0xFFD64545), size: 26),
             ),
             const SizedBox(height: 14),
             const Text('Remove this item?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary)),
             const SizedBox(height: 8),
             const Text(
               'This item will be removed from your submission. This action cannot be undone.',
@@ -69,10 +74,12 @@ class RemoveItemDialog extends StatelessWidget {
                         backgroundColor: const Color(0xFFD64545),
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
                       child: const Text('Yes, Remove',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 13)),
                     ),
                   ),
                 ),

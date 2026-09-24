@@ -27,10 +27,13 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
     // Menggunakan email contoh
     const String emelSimulasi = "syafiqahsyaza@gmail.com";
 
-    final String domain = kIsWeb 
-        ? 'localhost' 
-        : (defaultTargetPlatform == TargetPlatform.android ? '10.0.2.2' : '10.103.19.67');
-    final url = Uri.parse('http://$domain/helpdesk_api/get_user.php?email=$emelSimulasi');
+    final String domain = kIsWeb
+        ? 'localhost'
+        : (defaultTargetPlatform == TargetPlatform.android
+            ? '10.0.2.2'
+            : '10.103.19.67');
+    final url = Uri.parse(
+        'http://$domain/helpdesk_api/get_user.php?email=$emelSimulasi');
 
     try {
       final respon = await http.get(url);
@@ -45,8 +48,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
 
           if (mounted) {
             // 1. get nama jabatan dari skrin depan
-            final Object? argsTargetDept = ModalRoute.of(context)?.settings.arguments;
-            String targetDept = (widget.department ?? argsTargetDept ?? 'IT').toString().trim().toLowerCase();
+            final Object? argsTargetDept =
+                ModalRoute.of(context)?.settings.arguments;
+            String targetDept = (widget.department ?? argsTargetDept ?? 'IT')
+                .toString()
+                .trim()
+                .toLowerCase();
 
             // 2.  terus kekalkan masuk ke fail  /complaint/fill
             Navigator.pushReplacementNamed(
@@ -55,7 +62,8 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
               arguments: {
                 'nama_user': namaDariDB,
                 'emel_user': emelDariDB,
-                'selected_dept': targetDept, //   jenis jabatan ke dalam arguments!
+                'selected_dept':
+                    targetDept, //   jenis jabatan ke dalam arguments!
               },
             );
           }
@@ -76,33 +84,48 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
     }
   }
 
-  // LANGKAH 1: BUKA SKRIN LOGIN MICROSOFT UNIKL
+  // LANGKAH 1: BACA CREDENTIAL SECARA DINAMIK DARI .ENV BACKEND (PHP)
   Future<void> _handleRealSSOLogin() async {
     setState(() => _isLoading = true);
 
-    const String tenantId = "59c53902-8bf9-40c0-a6af-ff68bb705ee5"; // Tenant ID
-    
-    // URL OAuth Microsoft UniKL untuk membuka skrin 'Pick an account'
-    final String authUrl = "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/authorize"
-        "?client_id=common" // common
-        "&response_type=code"
-        "&redirect_uri=${Uri.encodeComponent('http://localhost/helpdesk_api/microsoft_login.php')}"
-        "&response_mode=query"
-        "&scope=openid%20profile%20email";
+    final String domain = kIsWeb
+        ? 'localhost'
+        : (defaultTargetPlatform == TargetPlatform.android
+            ? '10.0.2.2'
+            : '10.103.19.67');
 
-    final Uri uri = Uri.parse(authUrl);
+    final configUrl =
+        Uri.parse('http://$domain/helpdesk_api/get_microsoft_config.php');
 
     try {
-      // Buka terus halaman rasmi Microsoft di External Browser
-      bool launched = await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-      );
-      if (!launched) {
-        _tampilMesej("Tidak dapat membuka skrin login Microsoft.");
+      // 1. Ambil Auth URL daripada backend PHP yang membaca fail .env di helpdesk_api
+      final response = await http.get(configUrl);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data['status'] == 'success') {
+          final String authUrl = data['auth_url'];
+          final Uri uri = Uri.parse(authUrl);
+
+          // 2. Buka halaman Microsoft di External Browser
+          bool launched = await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
+
+          if (!launched) {
+            _tampilMesej("Tidak dapat membuka skrin login Microsoft.");
+          }
+        } else {
+          _tampilMesej(data['message'] ?? "Gagal mendapatkan konfigurasi SSO.");
+        }
+      } else {
+        _tampilMesej(
+            "Ralat pelayan konfigurasi: Status ${response.statusCode}");
       }
     } catch (e) {
-      _tampilMesej("Ralat semasa membuka SSO: $e");
+      _tampilMesej("Ralat Sambungan: Pastikan Laragon aktif. ($e)");
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -159,20 +182,24 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                           width: 80,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Colors.white, 
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
-                             ),
+                          ),
                           alignment: Alignment.center,
                           child: Image.asset(
                             'lib/assets/images/unikl_logo.png',
                             width: 70,
-                            fit: BoxFit.contain, 
-                            errorBuilder: (context, error, stackTrace) => Container(
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
                               width: 34,
                               height: 34,
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6)),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(6)),
                               alignment: Alignment.center,
-                              child: const Icon(Icons.broken_image_outlined, color: Colors.red, size: 18),
+                              child: const Icon(Icons.broken_image_outlined,
+                                  color: Colors.red, size: 18),
                             ),
                           ),
                         ),
@@ -225,7 +252,6 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                       style: AppTextStyles.cardSubtitle,
                     ),
                     const SizedBox(height: 24),
-
                     _isLoading
                         ? const CircularProgressIndicator()
                         : Column(
@@ -242,13 +268,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                               ),
                             ],
                           ),
-
                     const SizedBox(height: 16),
                     TextButton.icon(
                       onPressed: () => Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/',
-                            (route) => false,
+                        (route) => false,
                       ),
                       icon: const Icon(Icons.home_outlined,
                           size: 14, color: AppColors.textSecondary),

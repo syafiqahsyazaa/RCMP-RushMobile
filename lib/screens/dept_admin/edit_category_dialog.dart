@@ -5,14 +5,15 @@ import 'dart:convert';
 import '../../theme/app_theme.dart';
 
 Future<void> showEditCategoryDialog(
-    BuildContext context, {
-      required String categoryId,
-      required String categoryName,
-    }) async {
+  BuildContext context, {
+  required String categoryId,
+  required String categoryName,
+}) async {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
-      return _EditCategoryDialogContent(categoryId: categoryId, categoryName: categoryName);
+      return _EditCategoryDialogContent(
+          categoryId: categoryId, categoryName: categoryName);
     },
   );
 }
@@ -21,13 +22,16 @@ class _EditCategoryDialogContent extends StatefulWidget {
   final String categoryId;
   final String categoryName;
 
-  const _EditCategoryDialogContent({required this.categoryId, required this.categoryName});
+  const _EditCategoryDialogContent(
+      {required this.categoryId, required this.categoryName});
 
   @override
-  State<_EditCategoryDialogContent> createState() => _EditCategoryDialogContentState();
+  State<_EditCategoryDialogContent> createState() =>
+      _EditCategoryDialogContentState();
 }
 
-class _EditCategoryDialogContentState extends State<_EditCategoryDialogContent> {
+class _EditCategoryDialogContentState
+    extends State<_EditCategoryDialogContent> {
   late TextEditingController _nameController;
   bool _isSaving = false;
 
@@ -65,7 +69,8 @@ class _EditCategoryDialogContentState extends State<_EditCategoryDialogContent> 
         if (hasil['status'] == 'berjaya') {
           if (mounted) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(hasil['mesej'])));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(hasil['mesej'])));
           }
         }
       }
@@ -90,32 +95,48 @@ class _EditCategoryDialogContentState extends State<_EditCategoryDialogContent> 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Edit Category Track', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.navy)),
-                IconButton(icon: const Icon(Icons.close, size: 18), onPressed: () => Navigator.pop(context)),
+                const Text('Edit Category Track',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.navy)),
+                IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => Navigator.pop(context)),
               ],
             ),
             const Divider(),
             const SizedBox(height: 10),
-            const Text('Category Name *', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+            const Text('Category Name *',
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
             TextFormField(
               controller: _nameController,
               style: const TextStyle(fontSize: 12.5),
-              decoration: const InputDecoration(contentPadding: EdgeInsets.all(10), border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(10),
+                  border: OutlineInputBorder()),
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: Colors.grey))),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel',
+                        style: TextStyle(color: Colors.grey))),
                 const SizedBox(width: 10),
                 _isSaving
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.navy, foregroundColor: Colors.white),
-                  onPressed: _simpanPerubahanKategori,
-                  child: const Text('Save Changes', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.navy,
+                            foregroundColor: Colors.white),
+                        onPressed: _simpanPerubahanKategori,
+                        child: const Text('Save Changes',
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold)),
+                      ),
               ],
             )
           ],
