@@ -1,0 +1,33 @@
+name: rush_app
+description: "RUSH — UniKL RCMP User Helpdesk (Flutter UI clone)."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.2.0
+  shared_preferences: ^2.2.2
+  file_picker: ^8.0.0
+  flutter_local_notifications: ^17.2.2 # Untuk notifikasi phone!
+  aad_oauth: ^1.0.0
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - lib/assets/images/unikl_logo.png
+    - lib/assets/images/bg.jpg
+  # Uncomment once you add a real campus photo, used by UserLoginScreen
+  # as the full-bleed background (falls back to a gradient if missing).
+  # assets:
+  #   - assets/images/campus_background.jpg
