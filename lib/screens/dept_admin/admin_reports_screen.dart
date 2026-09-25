@@ -101,26 +101,35 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanLive · Admin',
-        currentRoute: '/admin/reports',
+      bottomNavigationBar: PortalBottomNav(
         items: _adminNavItems,
-        staffName: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['full_name'] ??
-            "Admin UniKL",
-        role: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['role'] ??
-            "Admin",
+        currentRoute: '/admin/reports',
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
-        title: const Text('Reports & Analytics',
-            style: TextStyle(
-                color: AppColors.navy,
-                fontSize: 14,
-                fontWeight: FontWeight.w700)),
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'lib/assets/images/unikl_logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.shield, color: AppColors.navy),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_namaJabatanLive,
+                style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700)),
+            const Text('Reports & Analytics',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          ],
+        ),
       ),
       body: SafeArea(
         child: _isLoading
@@ -128,8 +137,8 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
             : Column(
                 children: [
                   // ==================== BAR MENU HORIZONTAL TOP ANCHORS ====================
+                  const Divider(height: 1),
                   Container(
-                    color: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 16),
                     height: 58,
@@ -160,7 +169,6 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                       }),
                     ),
                   ),
-                  const Divider(height: 1),
 
                   // ==================== LIST  5 KAD LAPORAN INTEGRASI  ====================
                   Expanded(

@@ -168,16 +168,9 @@ class _StaffAllTicketsScreenState extends State<StaffAllTicketsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanStaffLive · Staff',
-        currentRoute: '/staff/tickets',
+      bottomNavigationBar: PortalBottomNav(
         items: _staffNavItems,
-        staffName: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['full_name'] ??
-            (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['name'] ??
-            "STAFF", // Auto-fallback jikalau arguments kosong!
-        role: 'Staff',
+        currentRoute: '/staff/tickets',
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,

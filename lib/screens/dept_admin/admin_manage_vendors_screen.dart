@@ -519,36 +519,64 @@ class _AdminManageVendorsScreenState extends State<AdminManageVendorsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanLive · Admin',
-        currentRoute: '/admin/vendors',
+      bottomNavigationBar: PortalBottomNav(
         items: _adminNavItems,
-        staffName: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['full_name'] ??
-            "Admin UniKL",
-        role: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['role'] ??
-            "Admin",
+        currentRoute: '/admin/vendors',
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text('Manage Vendors $_namaJabatanLive',
-            style: const TextStyle(
-                color: AppColors.navy,
-                fontSize: 13,
-                fontWeight: FontWeight.bold)),
-        actions: [
-          IconButton(
-              onPressed: _bukaBorangAddVendorDanRefresh,
-              icon: const Icon(Icons.add_business, color: AppColors.navy))
-        ],
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'lib/assets/images/unikl_logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.shield, color: AppColors.navy),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_namaJabatanLive,
+                style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700)),
+            const Text('Vendor Management',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          ],
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(16),
               children: [
+                // ==================== ADD VENDOR BUTTON DI BAWAH APPBAR ====================
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                    height: 38,
+                    child: ElevatedButton.icon(
+                      onPressed: _bukaBorangAddVendorDanRefresh,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.navy,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                      icon: const Icon(Icons.add_business, size: 16),
+                      label: const Text('Add New Vendor',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 // =========================================================================
                 // BARISAN 4 KAD STATISTIK (TAPISAN REAL-TIME)
                 // =========================================================================

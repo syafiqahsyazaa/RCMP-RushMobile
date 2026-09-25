@@ -219,11 +219,9 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanStaffLive · Staff',
-        currentRoute: '/staff/dashboard',
+      bottomNavigationBar: PortalBottomNav(
         items: _staffNavItems,
-        staffName: _namaStaffLive.isNotEmpty ? _namaStaffLive : "Staff Support",
+        currentRoute: '/staff/dashboard',
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,

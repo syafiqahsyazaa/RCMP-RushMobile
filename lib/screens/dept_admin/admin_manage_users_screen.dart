@@ -109,54 +109,35 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanLive · Admin',
-        currentRoute: '/admin/users',
+      bottomNavigationBar: PortalBottomNav(
         items: _adminNavItems,
-        staffName: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['full_name'] ??
-            "Staff Support",
-        role: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['role'] ??
-            "Admin",
+        currentRoute: '/admin/users',
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
-        title: const Text('Manage Users',
-            style: TextStyle(
-                color: AppColors.navy,
-                fontSize: 14,
-                fontWeight: FontWeight.w700)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Center(
-              child: SizedBox(
-                height: 34,
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    await showAddStaffDialog(context);
-                    _ambilSenaraiStaff(); // Segarkan data selepas tambah user ditutup
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.navy,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                  icon: const Icon(Icons.add, size: 15),
-                  label: const Text('Add User',
-                      style:
-                          TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-                ),
-              ),
-            ),
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'lib/assets/images/unikl_logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.shield, color: AppColors.navy),
           ),
-        ],
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_namaJabatanLive,
+                style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700)),
+            const Text('User Management',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          ],
+        ),
       ),
       body: SafeArea(
         child: _isLoading
@@ -166,7 +147,33 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-// UI BAR CARIAN & SUSUNAN TAPISAN BARU (SORT BY ROLE)
+                    // ==================== ADD USER BUTTON DI BAWAH APPBAR ====================
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: SizedBox(
+                        height: 38,
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            await showAddStaffDialog(context);
+                            _ambilSenaraiStaff();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.navy,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                          icon: const Icon(Icons.add, size: 16),
+                          label: const Text('Add New User',
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // UI BAR CARIAN & SUSUNAN TAPISAN BARU (SORT BY ROLE)
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(

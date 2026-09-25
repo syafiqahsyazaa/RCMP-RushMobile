@@ -47,16 +47,13 @@ class PortalNavDrawer extends StatelessWidget {
               child: Row(
                 children: [
                   // =========================================================================
-                  // 🚀 VERSl SUNTIKAN GAMBAR SEJATI SYAFIQAH MURNI (LOGO DRAWERS JABATAN) 🚀
-                  // 100% Menukar ikon shield hantu kepada paparan visual gambar logo tulin!
-                  // =========================================================================
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Image.asset(
                       'lib/assets/images/unikl_logo.png',
-                      width: 50, // Kita besarkan sikit lebar dia murni
+                      width: 50,
                       fit: BoxFit
-                          .contain, // 🚀 KUNCI: Guna contain supaya tak penyek!
+                          .contain,
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: 34,
                         height: 34,
@@ -740,6 +737,103 @@ class IconTextAction extends StatelessWidget {
       label: Text(label,
           style: TextStyle(
               fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+    );
+  }
+}
+
+/// A gorgeous, modern floating bottom navigation bar for Admin and Staff portals.
+class PortalBottomNav extends StatelessWidget {
+  final List<AdminNavItem> items;
+  final String currentRoute;
+
+  const PortalBottomNav({
+    super.key,
+    required this.items,
+    required this.currentRoute,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.navyDark,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Container(
+          height: 68,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: items.map((item) {
+                final active = item.route == currentRoute;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: InkWell(
+                    onTap: () {
+                      if (!active) {
+                        final args = ModalRoute.of(context)?.settings.arguments;
+                        Navigator.pushReplacementNamed(
+                          context,
+                          item.route,
+                          arguments: args,
+                        );
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: active
+                            ? AppColors.gold.withValues(alpha: 0.25)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        border: active
+                            ? Border.all(
+                                color: AppColors.gold.withValues(alpha: 0.5),
+                                width: 1)
+                            : null,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            item.icon,
+                            size: 20,
+                            color: active ? AppColors.gold : Colors.white60,
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            item.label,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight:
+                                  active ? FontWeight.w700 : FontWeight.w500,
+                              color: active ? Colors.white : Colors.white70,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

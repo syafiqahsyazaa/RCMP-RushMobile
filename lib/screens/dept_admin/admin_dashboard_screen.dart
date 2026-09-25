@@ -46,6 +46,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Timer? _notifPollTimer; // 🕒 PEMASA POLLING !
   String _lastKnownTopTicketId = ""; // Track tiket terakhir
 
+  final ScrollController _scrollController = ScrollController();
+  final List<GlobalKey> _sectionKeys = List.generate(4, (index) => GlobalKey());
+  final List<String> _sectionTitles = const [];
+
+  void _scrollToSection(int index) {
+    setState(() => _selectedCardIndex = index);
+    final context = _sectionKeys[index].currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +75,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _notifPollTimer?.cancel(); // Matikan pemasa bila keluar
     super.dispose();
   }
@@ -161,17 +178,23 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanLive · Admin',
-        currentRoute: '/admin/dashboard',
+      bottomNavigationBar: PortalBottomNav(
         items: _adminNavItems,
-        staffName: _namaAdminLive.isNotEmpty ? _namaAdminLive : "Admin UniKL",
-        role: 'Admin',
+        currentRoute: '/admin/dashboard',
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'lib/assets/images/unikl_logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.shield, color: AppColors.navy),
+          ),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -340,7 +363,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                   },
                                 ),
                               ),
-                            const SizedBox(height: 10),
                           ],
                         ),
                       );
@@ -350,18 +372,210 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ];
             },
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
+          PopupMenuButton<void>(
+            icon: CircleAvatar(
+              radius: 16,
+              backgroundColor: AppColors.navy,
+              child: Text(
+                _namaAdminLive.isNotEmpty
+                    ? _namaAdminLive.substring(0, 1).toUpperCase()
+                    : 'A',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            offset: const Offset(0, 45),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: 8,
+            color: Colors.white,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<void>(
+                  enabled: false,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _namaAdminLive.isNotEmpty
+                              ? _namaAdminLive
+                              : "Admin UniKL",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColors.textPrimary),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          currentLoggedInUserEmail,
+                          style: const TextStyle(
+                              fontSize: 11, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.gold.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'Role: Admin',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.navy),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const PopupMenuDivider(),
+                PopupMenuItem<void>(
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/', (route) => false);
+                    AppSnackBar.show(context, 'Logged out successfully.');
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.logout_rounded,
+                          color: Colors.redAccent, size: 18),
+                      SizedBox(width: 10),
+                      Text('Logout',
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ];
+            },
+          ),
         ],
       ),
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : ListView(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(16),
                 children: [
+                  // ==================== HERO GRADIENT HEADER CARD ====================
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF16233F), Color(0xFF0F1A30)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.navy.withValues(alpha: 0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.gold,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    _namaJabatanLive.toUpperCase(),
+                                    style: const TextStyle(
+                                      color: AppColors.gold,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Welcome back, ${_namaAdminLive.isNotEmpty ? _namaAdminLive : 'Admin'}!",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                "Here is your real-time helpdesk performance overview.",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.15),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              const Text(
+                                "ACTIVE",
+                                style: TextStyle(
+                                  color: AppColors.gold,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _counters['all'] ?? '0',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
                   // ====================  4 KAD INTERAKTIF ====================
                   SizedBox(
-                    height: 105,
+                    height: 80,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
@@ -395,18 +609,49 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
 
-                  // ==================== BOX PUTIH CARTA DYNAMIC PREMIUM ====================
+                  // ==================== HORIZONTAL TABS BAR ====================
+                  SizedBox(
+                    height: 50,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(_sectionTitles.length, (i) {
+                        final active = _selectedCardIndex == i;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(_sectionTitles[i],
+                                style: const TextStyle(fontSize: 11.5)),
+                            selected: active,
+                            selectedColor: AppColors.navy,
+                            backgroundColor: Colors.white,
+                            labelStyle: TextStyle(
+                              color:
+                                  active ? Colors.white : AppColors.textPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: const BorderSide(color: AppColors.border),
+                            ),
+                            onSelected: (_) => _scrollToSection(i),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+
+                  // ==================== SECTION 0: STATUS OVERVIEW ====================
                   Container(
+                    key: _sectionKeys[0],
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: AppColors.border),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.03),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 15,
                             offset: const Offset(0, 6)),
                       ],
@@ -414,173 +659,118 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: _selectedCardIndex == 0
-                                    ? const Color(0xFFEAF1FB)
-                                    : _selectedCardIndex == 1
-                                        ? const Color(0xFFFDF2F2)
-                                        : _selectedCardIndex == 2
-                                            ? const Color(0xFFEAF7EE)
-                                            : const Color(0xFFFFF8E6),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                _selectedCardIndex == 0
-                                    ? Icons.bar_chart_rounded
-                                    : _selectedCardIndex == 1
-                                        ? Icons.notification_important_rounded
-                                        : _selectedCardIndex == 2
-                                            ? Icons.pie_chart_outline_rounded
-                                            : Icons.star_rounded,
-                                size: 18,
-                                color: _selectedCardIndex == 0
-                                    ? const Color(0xFF2F5FA3)
-                                    : _selectedCardIndex == 1
-                                        ? const Color(0xFFD64545)
-                                        : _selectedCardIndex == 2
-                                            ? const Color(0xFF2E9E52)
-                                            : const Color(0xFFC9A227),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(_getChartTitle(),
-                                      style: const TextStyle(
-                                          fontSize: 13.5,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.textPrimary)),
-                                  const SizedBox(height: 2),
-                                  Text(_getChartSubtitle(),
-                                      style: const TextStyle(
-                                          fontSize: 10.5,
-                                          color: AppColors.textMuted)),
-                                ],
-                              ),
-                            ),
-                          ],
+                        _buildCardHeader(
+                          Icons.bar_chart_rounded,
+                          const Color(0xFF2F5FA3),
+                          const Color(0xFFEAF1FB),
+                          'All Tickets Status Overview',
+                          'Real-time volume overview segmented by complaint status tracks.',
                         ),
                         const Divider(height: 40, color: AppColors.border),
-                        if (_selectedCardIndex == 0)
-                          _buildVerticalBars(_statusChartData,
-                              startColor: const Color(0xFF3B82F6),
-                              endColor: const Color(0xFF1D4ED8)),
-                        if (_selectedCardIndex == 1)
-                          _buildVerticalBars(_priorityChartData,
-                              startColor: const Color(0xFFF87171),
-                              endColor: const Color(0xFFDC2626)),
-                        if (_selectedCardIndex == 2)
-                          _buildHorizontalCardBars(_closedFreqChartData),
-                        if (_selectedCardIndex == 3)
-                          _buildAvgRatingSpecialSection(),
+                        _buildVerticalBars(_statusChartData,
+                            startColor: const Color(0xFF3B82F6),
+                            endColor: const Color(0xFF1D4ED8)),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 20),
 
-                  // === BAHAGIAN QUICK ACCESS PANEL DI DALAM ADMIN DASHBOARD ANDA ===
-                  const Text('Quick Access Panel',
-                      style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary)),
-                  const SizedBox(height: 12),
-
-                  _QuickLink(
-                      icon: Icons.people_outline,
-                      label: 'All Tickets',
-                      onTap: () => Navigator
-                              .pushNamed(context, '/admin/tickets', arguments: {
-                            "email": ((ModalRoute.of(context)
-                                            ?.settings
-                                            .arguments
-                                        as Map<String, dynamic>?)?['email'] ??
-                                    currentLoggedInUserEmail)
-                                .toString(),
-                            "full_name": _namaAdminLive.isNotEmpty
-                                ? _namaAdminLive
-                                : "Admin UniKL",
-                            "role": "Admin"
-                          })),
-
-                  _QuickLink(
-                      icon: Icons.people_outline,
-                      label: 'Manage Users',
-                      onTap: () => Navigator
-                              .pushNamed(context, '/admin/users', arguments: {
-                            "email": ((ModalRoute.of(context)
-                                            ?.settings
-                                            .arguments
-                                        as Map<String, dynamic>?)?['email'] ??
-                                    currentLoggedInUserEmail)
-                                .toString(),
-                            "full_name": _namaAdminLive.isNotEmpty
-                                ? _namaAdminLive
-                                : "Admin UniKL",
-                            "role": "Admin"
-                          })),
-
-                  _QuickLink(
-                    icon: Icons.storefront_outlined,
-                    label: 'Manage Vendors',
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      '/admin/vendors',
-                      arguments: {
-                        "email": ((ModalRoute.of(context)?.settings.arguments
-                                    as Map<String, dynamic>?)?['email'] ??
-                                currentLoggedInUserEmail)
-                            .toString(),
-                        "full_name": _namaAdminLive.isNotEmpty
-                            ? _namaAdminLive
-                            : "Admin UniKL",
-                        "role": "Admin",
-                        "departmentLabel": '$_namaJabatanLive · Admin',
-                      },
+                  // ==================== SECTION 1: PRIORITY BREAKDOWN ====================
+                  Container(
+                    key: _sectionKeys[1],
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCardHeader(
+                          Icons.notification_important_rounded,
+                          const Color(0xFFD64545),
+                          const Color(0xFFFDF2F2),
+                          'Open Tickets Priority Breakdown',
+                          'Urgency assessment metrics for active open complaints.',
+                        ),
+                        const Divider(height: 40, color: AppColors.border),
+                        _buildVerticalBars(_priorityChartData,
+                            startColor: const Color(0xFFF87171),
+                            endColor: const Color(0xFFDC2626)),
+                      ],
                     ),
                   ),
+                  const SizedBox(height: 20),
 
-                  _QuickLink(
-                      icon: Icons.category_outlined,
-                      label: 'Categories',
-                      onTap: () => Navigator.pushNamed(
-                              context, '/admin/categories',
-                              arguments: {
-                                "email":
-                                    ((ModalRoute.of(context)?.settings.arguments
-                                                    as Map<String, dynamic>?)?[
-                                                'email'] ??
-                                            currentLoggedInUserEmail)
-                                        .toString(),
-                                "full_name": _namaAdminLive.isNotEmpty
-                                    ? _namaAdminLive
-                                    : "Admin UniKL",
-                                "role": "Admin"
-                              })),
+                  // ==================== SECTION 2: TOP CATEGORIES ====================
+                  Container(
+                    key: _sectionKeys[2],
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCardHeader(
+                          Icons.pie_chart_outline_rounded,
+                          const Color(0xFF2E9E52),
+                          const Color(0xFFEAF7EE),
+                          'Top Closed Complaints Frequency',
+                          'Category tracks with the highest number of fully resolved tickets.',
+                        ),
+                        const Divider(height: 40, color: AppColors.border),
+                        _buildHorizontalCardBars(_closedFreqChartData),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
 
-                  _QuickLink(
-                      icon: Icons.bar_chart_outlined,
-                      label: 'Reports & Analytics',
-                      onTap: () => Navigator
-                              .pushNamed(context, '/admin/reports', arguments: {
-                            "email": ((ModalRoute.of(context)
-                                            ?.settings
-                                            .arguments
-                                        as Map<String, dynamic>?)?['email'] ??
-                                    currentLoggedInUserEmail)
-                                .toString(),
-                            "full_name": _namaAdminLive.isNotEmpty
-                                ? _namaAdminLive
-                                : "Admin UniKL",
-                            "role": "Admin"
-                          })),
-
+                  // ==================== SECTION 3: FEEDBACK RATINGS ====================
+                  Container(
+                    key: _sectionKeys[3],
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCardHeader(
+                          Icons.star_rounded,
+                          const Color(0xFFC9A227),
+                          const Color(0xFFFFF8E6),
+                          'Feedback Rating Breakdown',
+                          'Total counts recorded for each feedback score star packet.',
+                        ),
+                        const Divider(height: 40, color: AppColors.border),
+                        _buildAvgRatingSpecialSection(),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -594,7 +784,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     bool isSelected = _selectedCardIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedCardIndex = index),
+      onTap: () => _scrollToSection(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         width: 145,
@@ -1013,12 +1203,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary)),
-                      if (isBreached)
-                        const Text('BREACHED •',
-                            style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xFFD64545))),
                     ],
                   ),
                   Text(tkt['ticket_id'] ?? '',
@@ -1029,7 +1213,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   const SizedBox(height: 4),
                   Text(
                     isBreached
-                        ? 'SLA clock breached! Fix action required.'
+                        ? 'SLA clock breached!'
                         : 'Ticket status — ${tkt['status']}',
                     style: TextStyle(
                         fontSize: 10,
@@ -1055,6 +1239,40 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
+  // Pembantu tajuk kad carta
+  Widget _buildCardHeader(IconData icon, Color iconColor, Color bgColor,
+      String title, String subtitle) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 18, color: iconColor),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary)),
+              const SizedBox(height: 2),
+              Text(subtitle,
+                  style: const TextStyle(
+                      fontSize: 10.5, color: AppColors.textMuted)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   int _kiraMinitBekerjaSLA(DateTime start, DateTime end) {
     int minutes = 0;
     DateTime current = start;
@@ -1065,42 +1283,5 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       current = current.add(const Duration(minutes: 1));
     }
     return minutes;
-  }
-}
-
-class _QuickLink extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _QuickLink(
-      {required this.icon, required this.label, required this.onTap});
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.border)),
-        child: Row(
-          children: [
-            Icon(icon, size: 18, color: AppColors.navy),
-            const SizedBox(width: 12),
-            Expanded(
-                child: Text(label,
-                    style: const TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary))),
-            const Icon(Icons.chevron_right,
-                size: 18, color: AppColors.textMuted),
-          ],
-        ),
-      ),
-    );
   }
 }
