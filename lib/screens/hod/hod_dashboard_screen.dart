@@ -34,10 +34,33 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
   List<dynamic> _closedFreqChartData = [];
   List<dynamic> _starsChartData = [];
 
+  final ScrollController _scrollController = ScrollController();
+  final List<GlobalKey> _sectionKeys = List.generate(4, (index) => GlobalKey());
+  final List<String> _sectionTitles = const [
+  ];
+
+  void _scrollToSection(int index) {
+    setState(() => _selectedCardIndex = index);
+    final context = _sectionKeys[index].currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _ambilDataAdminDashboard();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   // Tempat menyimpan nama jabatan secara dinamik dari database
@@ -110,31 +133,15 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanLive · HOD',
-        currentRoute: '/admin/dashboard',
+      bottomNavigationBar: PortalBottomNav(
         items: _adminNavItems,
-        staffName: _namaHodLive.isNotEmpty ? _namaHodLive : "Admin UniKL",
-        role: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['role'] ??
-            "HOD",
+        currentRoute: '/hod/dashboard',
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(_namaJabatanLive,
-                style: const TextStyle(
-                    color: AppColors.navy,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700)),
-            const Text('Dashboard Overview',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
-          ],
-        ),
+      appBar: buildAdminAppBar(
+        context: context,
+        departmentLabel: _namaJabatanLive,
+        screenTitle: 'HOD Dashboard Overview',
+        adminName: _namaHodLive.isNotEmpty ? _namaHodLive : 'HOD',
       ),
       body: SafeArea(
         child: _isLoading
@@ -142,6 +149,110 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
+                  // ==================== HERO GRADIENT HEADER CARD ====================
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF16233F), Color(0xFF0F1A30)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.navy.withValues(alpha: 0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.gold,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    _namaJabatanLive.toUpperCase(),
+                                    style: const TextStyle(
+                                      color: AppColors.gold,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Welcome back, ${_namaHodLive.isNotEmpty ? _namaHodLive : 'HOD'}!",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                "Here is your department performance overview.",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.15),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              const Text(
+                                "ACTIVE",
+                                style: TextStyle(
+                                  color: AppColors.gold,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _counters['all'] ?? '0',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
                   // ==================== BARISAN 4 KAD INTERAKTIF  ====================
                   SizedBox(
                     height: 105,
@@ -178,17 +289,50 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
 
+                  // ==================== HORIZONTAL TABS BAR ====================
+                  SizedBox(
+                    height: 50,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(_sectionTitles.length, (i) {
+                        final active = _selectedCardIndex == i;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            label: Text(_sectionTitles[i],
+                                style: const TextStyle(fontSize: 11.5)),
+                            selected: active,
+                            selectedColor: AppColors.navy,
+                            backgroundColor: Colors.white,
+                            labelStyle: TextStyle(
+                              color:
+                                  active ? Colors.white : AppColors.textPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: const BorderSide(color: AppColors.border),
+                            ),
+                            onSelected: (_) => _scrollToSection(i),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // ==================== SECTION 0: STATUS OVERVIEW ====================
                   Container(
+                    key: _sectionKeys[0],
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: AppColors.border),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.03),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 15,
                             offset: const Offset(0, 6)),
                       ],
@@ -196,75 +340,118 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: _selectedCardIndex == 0
-                                    ? const Color(0xFFEAF1FB)
-                                    : _selectedCardIndex == 1
-                                        ? const Color(0xFFFDF2F2)
-                                        : _selectedCardIndex == 2
-                                            ? const Color(0xFFEAF7EE)
-                                            : const Color(0xFFFFF8E6),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Icon(
-                                _selectedCardIndex == 0
-                                    ? Icons.bar_chart_rounded
-                                    : _selectedCardIndex == 1
-                                        ? Icons.notification_important_rounded
-                                        : _selectedCardIndex == 2
-                                            ? Icons.pie_chart_outline_rounded
-                                            : Icons.star_rounded,
-                                size: 18,
-                                color: _selectedCardIndex == 0
-                                    ? const Color(0xFF2F5FA3)
-                                    : _selectedCardIndex == 1
-                                        ? const Color(0xFFD64545)
-                                        : _selectedCardIndex == 2
-                                            ? const Color(0xFF2E9E52)
-                                            : const Color(0xFFC9A227),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(_getChartTitle(),
-                                      style: const TextStyle(
-                                          fontSize: 13.5,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.textPrimary)),
-                                  const SizedBox(height: 2),
-                                  Text(_getChartSubtitle(),
-                                      style: const TextStyle(
-                                          fontSize: 10.5,
-                                          color: AppColors.textMuted)),
-                                ],
-                              ),
-                            ),
-                          ],
+                        _buildCardHeader(
+                          Icons.bar_chart_rounded,
+                          const Color(0xFF2F5FA3),
+                          const Color(0xFFEAF1FB),
+                          'All Tickets Status Overview',
+                          'Real-time volume overview segmented by complaint status tracks.',
                         ),
                         const Divider(height: 40, color: AppColors.border),
-                        if (_selectedCardIndex == 0)
-                          _buildVerticalBars(_statusChartData,
-                              startColor: const Color(0xFF3B82F6),
-                              endColor: const Color(0xFF1D4ED8)),
-                        if (_selectedCardIndex == 1)
-                          _buildVerticalBars(_priorityChartData,
-                              startColor: const Color(0xFFF87171),
-                              endColor: const Color(0xFFDC2626)),
-                        if (_selectedCardIndex == 2)
-                          _buildHorizontalCardBars(_closedFreqChartData),
-                        if (_selectedCardIndex == 3)
-                          _buildAvgRatingSpecialSection(),
+                        _buildVerticalBars(_statusChartData,
+                            startColor: const Color(0xFF3B82F6),
+                            endColor: const Color(0xFF1D4ED8)),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
+
+                  // ==================== SECTION 1: PRIORITY BREAKDOWN ====================
+                  Container(
+                    key: _sectionKeys[1],
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCardHeader(
+                          Icons.notification_important_rounded,
+                          const Color(0xFFD64545),
+                          const Color(0xFFFDF2F2),
+                          'Open Tickets Priority Breakdown',
+                          'Urgency assessment metrics for active open complaints.',
+                        ),
+                        const Divider(height: 40, color: AppColors.border),
+                        _buildVerticalBars(_priorityChartData,
+                            startColor: const Color(0xFFF87171),
+                            endColor: const Color(0xFFDC2626)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ==================== SECTION 2: TOP CATEGORIES ====================
+                  Container(
+                    key: _sectionKeys[2],
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCardHeader(
+                          Icons.pie_chart_outline_rounded,
+                          const Color(0xFF2E9E52),
+                          const Color(0xFFEAF7EE),
+                          'Top Closed Complaints Frequency',
+                          'Category tracks with the highest number of fully resolved tickets.',
+                        ),
+                        const Divider(height: 40, color: AppColors.border),
+                        _buildHorizontalCardBars(_closedFreqChartData),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ==================== SECTION 3: FEEDBACK RATINGS ====================
+                  Container(
+                    key: _sectionKeys[3],
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCardHeader(
+                          Icons.star_rounded,
+                          const Color(0xFFC9A227),
+                          const Color(0xFFFFF8E6),
+                          'Feedback Rating Breakdown',
+                          'Total counts recorded for each feedback score star packet.',
+                        ),
+                        const Divider(height: 40, color: AppColors.border),
+                        _buildAvgRatingSpecialSection(),
+                      ],
+                    ),
+                  ),
                 ],
               ),
       ),
@@ -276,7 +463,7 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
     bool isSelected = _selectedCardIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedCardIndex = index),
+      onTap: () => _scrollToSection(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         width: 145,
@@ -603,6 +790,40 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                 ),
               );
             }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Pembantu tajuk kad carta
+  Widget _buildCardHeader(IconData icon, Color iconColor, Color bgColor,
+      String title, String subtitle) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 18, color: iconColor),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary)),
+              const SizedBox(height: 2),
+              Text(subtitle,
+                  style: const TextStyle(
+                      fontSize: 10.5, color: AppColors.textMuted)),
+            ],
           ),
         ),
       ],

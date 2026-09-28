@@ -187,7 +187,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(1),
           child: Image.asset(
             'lib/assets/images/unikl_logo.png',
             fit: BoxFit.contain,
@@ -372,7 +372,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ];
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 2),
           PopupMenuButton<void>(
             icon: CircleAvatar(
               radius: 16,
@@ -460,6 +460,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ];
             },
           ),
+          const SizedBox(width: 15),
         ],
       ),
       body: SafeArea(

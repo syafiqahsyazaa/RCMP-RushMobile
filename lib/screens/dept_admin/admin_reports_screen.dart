@@ -105,31 +105,13 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
         items: _adminNavItems,
         currentRoute: '/admin/reports',
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'lib/assets/images/unikl_logo.png',
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.shield, color: AppColors.navy),
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(_namaJabatanLive,
-                style: const TextStyle(
-                    color: AppColors.navy,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700)),
-            const Text('Reports & Analytics',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
-          ],
-        ),
+      appBar: buildAdminAppBar(
+        context: context,
+        departmentLabel: _namaJabatanLive,
+        screenTitle: 'Reports & Analytics',
+        adminName: 'Admin',
+        showProfileAvatar: false,
+        showNotificationIcon: false,
       ),
       body: SafeArea(
         child: _isLoading

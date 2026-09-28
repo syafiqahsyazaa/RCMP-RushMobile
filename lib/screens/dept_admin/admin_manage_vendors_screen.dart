@@ -528,7 +528,7 @@ class _AdminManageVendorsScreenState extends State<AdminManageVendorsScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(1),
           child: Image.asset(
             'lib/assets/images/unikl_logo.png',
             fit: BoxFit.contain,
@@ -585,7 +585,7 @@ class _AdminManageVendorsScreenState extends State<AdminManageVendorsScreen> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   shrinkWrap: true,
-                  childAspectRatio: 2.1,
+                  childAspectRatio: 2,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     // 1. KAD ALL VENDORS

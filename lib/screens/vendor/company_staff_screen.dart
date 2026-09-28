@@ -428,7 +428,7 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             4)),
-                                                child: const Text('OWNER',
+                                                child: const Text('PIC',
                                                     style: TextStyle(
                                                         fontSize: 8,
                                                         fontWeight:

@@ -347,7 +347,7 @@ class RealSSOButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.navy,
+          foregroundColor: Colors.blue,
           side: const BorderSide(color: AppColors.border),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -355,13 +355,13 @@ class RealSSOButton extends StatelessWidget {
           padding:
               width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
         ),
-        child: const Row(
+        child:  Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.vpn_key_outlined, size: 18),
+            _MicrosoftLogo(),
             SizedBox(width: 10),
             Text(
-              'Sign in with Real SSO',
+              'Continue with Microsoft (UniKL SSO)',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 13,

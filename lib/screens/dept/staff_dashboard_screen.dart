@@ -226,11 +226,27 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
-        title: Text(
-          _namaJabatanStaffLive,
-          style: const TextStyle(
-              color: AppColors.navy, fontSize: 13, fontWeight: FontWeight.w700),
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.all(1),
+          child: Image.asset(
+            'lib/assets/images/unikl_logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.shield, color: AppColors.navy),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_namaJabatanStaffLive,
+                style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700)),
+            const Text('Staff Dashboard',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          ],
         ),
         actions: [
           PopupMenuButton<void>(
@@ -605,7 +621,95 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
               ];
             },
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
+          PopupMenuButton<void>(
+            icon: CircleAvatar(
+              radius: 16,
+              backgroundColor: AppColors.navy,
+              child: Text(
+                _namaStaffLive.isNotEmpty
+                    ? _namaStaffLive.substring(0, 1).toUpperCase()
+                    : 'S',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            offset: const Offset(0, 45),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            elevation: 8,
+            color: Colors.white,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<void>(
+                  enabled: false,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _namaStaffLive.isNotEmpty
+                              ? _namaStaffLive
+                              : "Staff Support",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: AppColors.textPrimary),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          currentLoggedInUserEmail,
+                          style: const TextStyle(
+                              fontSize: 11, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.gold.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'Role: Staff',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.navy),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const PopupMenuDivider(),
+                PopupMenuItem<void>(
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/', (route) => false);
+                    AppSnackBar.show(context, 'Logged out successfully.');
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(Icons.logout_rounded,
+                          color: Colors.redAccent, size: 18),
+                      SizedBox(width: 10),
+                      Text('Logout',
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ];
+            },
+          ),
+          const SizedBox(width: 12),
         ],
       ),
       body: SafeArea(

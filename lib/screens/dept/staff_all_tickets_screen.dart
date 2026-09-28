@@ -175,12 +175,28 @@ class _StaffAllTicketsScreenState extends State<StaffAllTicketsScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
-        title: const Text('All Tickets',
-            style: TextStyle(
-                color: AppColors.navy,
-                fontSize: 14,
-                fontWeight: FontWeight.w700)),
+        automaticallyImplyLeading: false,
+        leading: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Image.asset(
+            'lib/assets/images/unikl_logo.png',
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.shield, color: AppColors.navy),
+          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_namaJabatanStaffLive,
+                style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700)),
+            const Text('Staff All Tickets',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          ],
+        ),
       ),
       body: SafeArea(
         child: _isLoading

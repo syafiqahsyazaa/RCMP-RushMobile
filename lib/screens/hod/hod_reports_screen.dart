@@ -86,26 +86,17 @@ class _HodReportsScreenState extends State<HodReportsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
-      drawer: PortalNavDrawer(
-        departmentLabel: '$_namaJabatanLive · HOD',
-        currentRoute: '/admin/reports',
+      bottomNavigationBar: PortalBottomNav(
         items: _adminNavItems,
-        staffName: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['full_name'] ??
-            "Admin UniKL",
-        role: (ModalRoute.of(context)?.settings.arguments
-                as Map<String, dynamic>?)?['role'] ??
-            "HOD",
+        currentRoute: '/hod/reports',
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.navy),
-        title: const Text('Reports & Analytics',
-            style: TextStyle(
-                color: AppColors.navy,
-                fontSize: 14,
-                fontWeight: FontWeight.w700)),
+      appBar: buildAdminAppBar(
+        context: context,
+        departmentLabel: _namaJabatanLive,
+        screenTitle: 'HOD Reports & Analytics',
+        adminName: 'HOD',
+        showProfileAvatar: false,
+        showNotificationIcon: false,
       ),
       body: SafeArea(
         child: _isLoading

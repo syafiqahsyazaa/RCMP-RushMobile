@@ -182,7 +182,7 @@ class _AdminAllTicketsScreenState extends State<AdminAllTicketsScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(1),
           child: Image.asset(
             'lib/assets/images/unikl_logo.png',
             fit: BoxFit.contain,

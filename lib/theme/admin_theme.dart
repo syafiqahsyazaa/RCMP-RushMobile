@@ -52,8 +52,7 @@ class PortalNavDrawer extends StatelessWidget {
                     child: Image.asset(
                       'lib/assets/images/unikl_logo.png',
                       width: 50,
-                      fit: BoxFit
-                          .contain,
+                      fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: 34,
                         height: 34,
@@ -754,6 +753,68 @@ class PortalBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isCompact = items.length <= 3;
+
+    final navContent = Row(
+      mainAxisAlignment:
+          isCompact ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
+      children: items.map((item) {
+        final active = item.route == currentRoute;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: InkWell(
+            onTap: () {
+              if (!active) {
+                final args = ModalRoute.of(context)?.settings.arguments;
+                Navigator.pushReplacementNamed(
+                  context,
+                  item.route,
+                  arguments: args,
+                );
+              }
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: isCompact ? 28 : 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: active
+                    ? AppColors.gold.withValues(alpha: 0.25)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+                border: active
+                    ? Border.all(
+                        color: AppColors.gold.withValues(alpha: 0.5), width: 1)
+                    : null,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    item.icon,
+                    size: 20,
+                    color: active ? AppColors.gold : Colors.white60,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    item.label,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                      color: active ? Colors.white : Colors.white70,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.navyDark,
@@ -769,71 +830,144 @@ class PortalBottomNav extends StatelessWidget {
         child: Container(
           height: 68,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: items.map((item) {
-                final active = item.route == currentRoute;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: InkWell(
-                    onTap: () {
-                      if (!active) {
-                        final args = ModalRoute.of(context)?.settings.arguments;
-                        Navigator.pushReplacementNamed(
-                          context,
-                          item.route,
-                          arguments: args,
-                        );
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: active
-                            ? AppColors.gold.withValues(alpha: 0.25)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12),
-                        border: active
-                            ? Border.all(
-                                color: AppColors.gold.withValues(alpha: 0.5),
-                                width: 1)
-                            : null,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            item.icon,
-                            size: 20,
-                            color: active ? AppColors.gold : Colors.white60,
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            item.label,
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight:
-                                  active ? FontWeight.w700 : FontWeight.w500,
-                              color: active ? Colors.white : Colors.white70,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
+          child: isCompact
+              ? SizedBox(width: double.infinity, child: navContent)
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: navContent,
+                ),
         ),
       ),
     );
   }
+}
+
+/// Standardized Admin/HOD AppBar with UniKL logo, department label, notifications, and profile avatar with logout.
+AppBar buildAdminAppBar({
+  required BuildContext context,
+  required String departmentLabel,
+  required String screenTitle,
+  required String adminName,
+  List<Widget>? extraActions,
+  bool showProfileAvatar = true,
+  bool showNotificationIcon = true,
+}) {
+  return AppBar(
+    backgroundColor: Colors.white,
+    elevation: 0,
+    automaticallyImplyLeading: false,
+    leading: Padding(
+      padding: const EdgeInsets.all(1.0),
+      child: Image.asset(
+        'lib/assets/images/unikl_logo.png',
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) =>
+            const Icon(Icons.shield, color: AppColors.navy),
+      ),
+    ),
+    title: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(departmentLabel,
+            style: const TextStyle(
+                color: AppColors.navy,
+                fontSize: 13,
+                fontWeight: FontWeight.w700)),
+        Text(screenTitle,
+            style:
+                const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+      ],
+    ),
+    actions: [
+      if (showProfileAvatar) ...[
+        const SizedBox(width: 8),
+        PopupMenuButton<void>(
+          icon: CircleAvatar(
+            radius: 16,
+            backgroundColor: AppColors.navy,
+            child: Text(
+              adminName.isNotEmpty
+                  ? adminName.substring(0, 1).toUpperCase()
+                  : 'H',
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          offset: const Offset(0, 45),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 8,
+          color: Colors.white,
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem<void>(
+                enabled: false,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        adminName.isNotEmpty ? adminName : "HOD UniKL",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        currentLoggedInUserEmail,
+                        style: const TextStyle(
+                            fontSize: 11, color: AppColors.textSecondary),
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'Role: ${adminName.contains("HOD") ? "HOD" : "HOD"}',
+                          style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const PopupMenuDivider(),
+              PopupMenuItem<void>(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/', (route) => false);
+                  AppSnackBar.show(context, 'Logged out successfully.');
+                },
+                child: Row(
+                  children: const [
+                    Icon(Icons.logout_rounded,
+                        color: Colors.redAccent, size: 18),
+                    SizedBox(width: 10),
+                    Text('Logout',
+                        style: TextStyle(
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12)),
+                  ],
+                ),
+              ),
+            ];
+          },
+        ),
+      ],
+      const SizedBox(width: 12),
+    ],
+  );
 }

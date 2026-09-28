@@ -207,12 +207,6 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary)),
-                      if (isBreached)
-                        const Text('BREACHED •',
-                            style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xFFD64545))),
                     ],
                   ),
                   Text(tkt['ticket_id'] ?? '',
@@ -707,7 +701,7 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
                   icon: Stack(
                     children: [
                       const Icon(Icons.notifications_none_rounded,
-                          color: AppColors.navy, size: 18),
+                          color: AppColors.navy, size: 25),
                       if (_senaraiTiketVendorLive
                           .where((t) =>
                               (t['status'] ?? '').toString().toLowerCase() !=
@@ -829,60 +823,33 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
                     ];
                   },
                 ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    showProfileSetupDialog(
-                      context: context,
-                      vendorData: _vendorData,
-                      onProfileFinalized: () {
-                        _tarikTiketVendorLive(); // Refresh balik senarai bila nama company bertukar
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              backgroundColor: Colors.green,
-                              content: Text(
-                                  'Company configurations successfully updated live! 🚀')),
-                        );
-                      },
-                    );
-                  },
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.business_center_outlined,
-                              size: 14, color: AppColors.navy),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                IconButton(
-                  tooltip: 'Company Staff',
-                  icon: Icon(
-                    Icons.people_outline,
-                    size: 18,
-                    color: _currentMenuIndex == 1
-                        ? const Color(0xFF1A365D)
-                        : Colors.grey,
-                  ),
-                  onPressed: () => setState(() => _currentMenuIndex = 1),
-                ),
-                IconButton(
-                  tooltip: 'Logout',
-                  icon: const Icon(Icons.logout,
-                      size: 16, color: Colors.redAccent),
-                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                      context, '/', (route) => false),
-                ),
+                const SizedBox(width: 12),
               ],
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: VendorBottomNav(
+        currentIndex: _currentMenuIndex,
+        onTabSelected: (index) => setState(() => _currentMenuIndex = index),
+        onProfileTap: () {
+          showProfileSetupDialog(
+            context: context,
+            vendorData: _vendorData,
+            onProfileFinalized: () {
+              _tarikTiketVendorLive();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    backgroundColor: Colors.green,
+                    content: Text(
+                        'Company configurations successfully updated live! 🚀')),
+              );
+            },
+          );
+        },
+        onLogoutTap: () {
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+        },
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -901,6 +868,105 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
                         _tarikTiketVendorLive(); // Refresh kaunter tiket bila balik dari sub-menu
                       },
                     ),
+    );
+  }
+}
+
+class VendorBottomNav extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTabSelected;
+  final VoidCallback onProfileTap;
+  final VoidCallback onLogoutTap;
+
+  const VendorBottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.onTabSelected,
+    required this.onProfileTap,
+    required this.onLogoutTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.navyDark,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Container(
+          height: 68,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(0, Icons.assignment_outlined, 'Work Orders',
+                  currentIndex == 0, () => onTabSelected(0)),
+              _buildNavItem(1, Icons.people_outline, 'Staff Crew',
+                  currentIndex == 1, () => onTabSelected(1)),
+              _buildNavItem(2, Icons.business_center_outlined, 'Profile',
+                  false, onProfileTap),
+              _buildNavItem(
+                  3, Icons.logout_rounded, 'Logout', false, onLogoutTap,
+                  isLogout: true),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(
+      int index, IconData icon, String label, bool active, VoidCallback onTap,
+      {bool isLogout = false}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: active
+              ? AppColors.gold.withValues(alpha: 0.25)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: active
+              ? Border.all(
+                  color: AppColors.gold.withValues(alpha: 0.5), width: 1)
+              : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: isLogout
+                  ? Colors.redAccent
+                  : (active ? AppColors.gold : Colors.white60),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                color: isLogout
+                    ? Colors.redAccent
+                    : (active ? Colors.white : Colors.white70),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
