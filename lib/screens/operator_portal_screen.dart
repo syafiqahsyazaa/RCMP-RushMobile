@@ -21,11 +21,90 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
   bool _showOtherOptions = false;
   bool _isLoading = false;
 
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   void _tampilMesej(String mesej) {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(mesej)),
       );
+    }
+  }
+
+  Future<void> _handleEmailLogin() async {
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _tampilMesej("Please enter your password.");
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    currentLoggedInUserEmail = email;
+
+    final String domain = kIsWeb
+        ? 'localhost'
+        : (defaultTargetPlatform == TargetPlatform.android
+            ? '10.0.2.2'
+            : '10.103.19.67');
+
+    final url = Uri.parse('http://$domain/helpdesk_api/check_user_role.php');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"email": email, "password": password}),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['status'] != 'berjaya') {
+          _tampilMesej(data['message'] ?? 'Invalid email or password.');
+          setState(() => _isLoading = false);
+          return;
+        }
+
+        String userRole =
+            (data['role'] ?? 'staff').toString().toLowerCase().trim();
+        String fullName =
+            (data['full_name'] ?? 'Staff UniKL').toString().trim();
+
+        if (!mounted) return;
+
+        final Map<String, dynamic> navigationArgs = {
+          "email": email,
+          "full_name": fullName,
+          "role": userRole.toUpperCase()
+        };
+
+        if (userRole == 'admin') {
+          Navigator.pushReplacementNamed(context, '/admin/dashboard',
+              arguments: navigationArgs);
+        } else if (userRole == 'hod') {
+          Navigator.pushReplacementNamed(context, '/hod/dashboard',
+              arguments: navigationArgs);
+        } else {
+          Navigator.pushReplacementNamed(context, '/staff/dashboard',
+              arguments: navigationArgs);
+        }
+      } else {
+        _tampilMesej("Ralat pelayan: Status ${response.statusCode}");
+      }
+    } catch (e) {
+      _tampilMesej("Ralat Sambungan: Pastikan Laragon aktif. ($e)");
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -76,9 +155,12 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
 
   // peranan akaun di Laragon & hantar ke destinasi tepat
   Future<void> _prosesSemakPerananDanMasuk() async {
-    final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
+    final String domain = kIsWeb
+        ? 'localhost'
+        : (defaultTargetPlatform == TargetPlatform.android
+            ? '10.0.2.2'
+            : '10.103.19.67');
 
-    //  emel sesi global semasa ke API check_user_role php
     final url = Uri.parse(
         'http://$domain/helpdesk_api/check_user_role.php?email=$currentLoggedInUserEmail');
 
@@ -86,6 +168,12 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
+
+        if (data['status'] != 'berjaya') {
+          _tampilMesej(data['message'] ?? 'Login failed.');
+          return;
+        }
+
         String userRole =
             (data['role'] ?? 'staff').toString().toLowerCase().trim();
         String fullName =
@@ -113,11 +201,12 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
           Navigator.pushReplacementNamed(context, '/staff/dashboard',
               arguments: navigationArgs);
         }
+      } else {
+        _tampilMesej("Ralat pelayan: Status ${response.statusCode}");
       }
     } catch (e) {
       print("Ralat ketika menyiasat suis peranan: $e");
-      // Fallback keselamatan jika offline/laragon belum dibuka semasa demo
-      if (mounted) Navigator.pushNamed(context, '/admin/dashboard');
+      _tampilMesej("Ralat Sambungan: Pastikan Laragon aktif. ($e)");
     }
   }
 
@@ -276,25 +365,26 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
                 ),
                 if (_showOtherOptions) ...[
                   const SizedBox(height: 16),
-                  const LabeledField(
+                  LabeledField(
                     label: 'Work Email',
                     hint: 'operator@unikl.edu.my',
                     icon: Icons.mail_outline,
+                    controller: _emailController,
                   ),
                   const SizedBox(height: 16),
-                  const LabeledField(
+                  LabeledField(
                     label: 'Password',
                     hint: 'Enter your password',
                     icon: Icons.lock_outline,
                     obscure: true,
+                    controller: _passwordController,
                   ),
                   const SizedBox(height: 18),
                   PrimaryButton(
                     label: 'Sign In',
                     icon: Icons.arrow_forward,
                     onPressed: () {
-                      // Untuk email/password fallback, kita heret juga ke fungsi suis peranan kita!
-                      _prosesSemakPerananDanMasuk();
+                      _handleEmailLogin();
                     },
                   ),
                 ],

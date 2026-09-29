@@ -182,7 +182,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                               _buildStatBox(
                                   (_ticketData['closed'] ?? '0').toString(),
                                   "CLOSED",
-                                  color: const Color(0xFF2E9E52)),
+                                  color: const Color(0xFF23B33A)),
                               _buildVerticalDivider(),
                               _buildStatBox(
                                   (_ticketData['high'] ?? '0').toString(),
@@ -251,7 +251,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                                     {"label": "MOHD", "value": 4},
                                     {"label": "SAY", "value": 3}
                                   ]),
-                              barColor: const Color(0xFF2F5FA3)),
+                              barColor: const Color(0xFF32D55B)),
                         ),
                         const SizedBox(height: 18),
 
@@ -311,7 +311,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                                     {"label": "Eco Safe", "value": 2},
                                     {"label": "Techno Live", "value": 2}
                                   ]),
-                              barColor: const Color(0xFF2E9E52)),
+                              barColor: const Color(0xFF6232D5)),
                         ),
                         const SizedBox(height: 18),
 
@@ -476,17 +476,17 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
         List<Color> gradColors = [barColor.withOpacity(0.7), barColor];
 
         if (item['label'] == 'Open')
-          gradColors = [const Color(0xFF60A5FA), const Color(0xFF1D4ED8)];
+          gradColors = [const Color(0xFF4ED9FF), const Color(0xFF3DB7D9)];
         if (item['label'] == 'In Progress')
           gradColors = [const Color(0xFFFBBF24), const Color(0xFFD97706)];
         if (item['label'] == 'Closed')
-          gradColors = [const Color(0xFF34D399), const Color(0xFF047857)];
+          gradColors = [const Color(0xFF41E248), const Color(0xFF33BA39)];
         if (item['label'] == 'High')
-          gradColors = [const Color(0xFFF87171), const Color(0xFFDC2626)];
+          gradColors = [const Color(0xFFF04141), const Color(0xFFDC2E2E)];
         if (item['label'] == 'Medium')
-          gradColors = [const Color(0xFFFB923C), const Color(0xFFEA580C)];
+          gradColors = [const Color(0xFFFF894E), const Color(0xFFFA7533)];
         if (item['label'] == 'Low')
-          gradColors = [const Color(0xFF93C5FD), const Color(0xFF2563EB)];
+          gradColors = [const Color(0xFF00C1F6), const Color(0xFF06A3CE)];
 
         return Column(
           children: [
@@ -554,7 +554,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                       value: ratio,
                       backgroundColor: AppColors.pageBackground,
                       valueColor:
-                          const AlwaysStoppedAnimation(Color(0xFF2E9E52)),
+                          const AlwaysStoppedAnimation(Color(0xFF30B63E)),
                       minHeight: 7)),
             ],
           ),
@@ -625,7 +625,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                               value: rowRatio,
                               backgroundColor: AppColors.pageBackground,
                               valueColor: const AlwaysStoppedAnimation(
-                                  Color(0xFFC9A227)),
+                                  Color(0xFFE4D54A)),
                               minHeight: 5))),
                   const SizedBox(width: 8),
                   SizedBox(

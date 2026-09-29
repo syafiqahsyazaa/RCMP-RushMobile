@@ -36,8 +36,7 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
 
   final ScrollController _scrollController = ScrollController();
   final List<GlobalKey> _sectionKeys = List.generate(4, (index) => GlobalKey());
-  final List<String> _sectionTitles = const [
-  ];
+  final List<String> _sectionTitles = const [];
 
   void _scrollToSection(int index) {
     setState(() => _selectedCardIndex = index);
@@ -264,28 +263,28 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                             _counters['all']!,
                             'All Tickets',
                             Icons.confirmation_number_outlined,
-                            const Color(0xFF2F5FA3)),
+                            const Color(0xFF4FE6EB)),
                         const SizedBox(width: 12),
                         _buildGlowStatCard(
                             1,
                             _counters['open']!,
                             'Open Tickets',
                             Icons.mark_email_unread_outlined,
-                            const Color(0xFFD64545)),
+                            const Color(0xFFFA485D)),
                         const SizedBox(width: 12),
                         _buildGlowStatCard(
                             2,
                             _counters['closed']!,
                             'Closed Tickets',
                             Icons.check_circle_outline,
-                            const Color(0xFF2E9E52)),
+                            const Color(0xFF3FD15B)),
                         const SizedBox(width: 12),
                         _buildGlowStatCard(
                             3,
                             "${_counters['rating']} ",
                             'Avg Rating',
                             Icons.star_outline_rounded,
-                            const Color(0xFFC9A227)),
+                            const Color(0xFFDBD545)),
                       ],
                     ),
                   ),
@@ -558,18 +557,18 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                   // 1. Pilihan warna untuk tab STATUS (All Tickets)
                   if (label == 'Open') {
                     dynamicGradientColors = [
-                      const Color(0xFF60A5FA),
-                      const Color(0xFF1D4ED8)
+                      const Color(0xFF33C7FF),
+                      const Color(0xFF15D4FF)
                     ]; // Biru Premium
                   } else if (label == 'In Progress') {
                     dynamicGradientColors = [
                       const Color(0xFFFBBF24),
-                      const Color(0xFFD97706)
-                    ]; // Kuning/Oren
+                      const Color(0xFFFFC733)
+                    ]; // Kuning/Oren Amaran
                   } else if (label == 'Closed') {
                     dynamicGradientColors = [
-                      const Color(0xFF34D399),
-                      const Color(0xFF047857)
+                      const Color(0xFF15FF74),
+                      const Color(0xFF33FF67)
                     ]; // Hijau Kejayaan
                   }
 
@@ -577,17 +576,17 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                   else if (label == 'Low') {
                     dynamicGradientColors = [
                       const Color(0xFF93C5FD),
-                      const Color(0xFF2563EB)
+                      const Color(0xFF71C1F6)
                     ]; // Biru Lembut
                   } else if (label == 'Medium') {
                     dynamicGradientColors = [
-                      const Color(0xFFFB923C),
-                      const Color(0xFFEA580C)
+                      const Color(0xFFFFC615),
+                      const Color(0xFFFFC733)
                     ]; // Oren
                   } else if (label == 'High') {
                     dynamicGradientColors = [
                       const Color(0xFFF87171),
-                      const Color(0xFFDC2626)
+                      const Color(0xFFE62929)
                     ]; // Merah
                   }
 
@@ -686,7 +685,7 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                 child: LinearProgressIndicator(
                   value: ratio,
                   backgroundColor: Colors.white,
-                  valueColor: const AlwaysStoppedAnimation(Color(0xFF2E9E52)),
+                  valueColor: const AlwaysStoppedAnimation(Color(0xFF4EE629)),
                   minHeight: 8,
                 ),
               ),
@@ -772,7 +771,7 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
                           value: rowRatio,
                           backgroundColor: AppColors.pageBackground,
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color(0xFFC9A227)),
+                              Color(0xFFFAEA5C)),
                           minHeight: 6,
                         ),
                       ),

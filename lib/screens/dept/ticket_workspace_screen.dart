@@ -1826,12 +1826,27 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
 
                                         // !
                                         DateTime? waktuMula;
-                                        if (waktuMulaSlaStr.isNotEmpty) {
-                                          waktuMula = DateTime.tryParse(
-                                              waktuMulaSlaStr);
+                                        if (waktuMulaSlaStr.isNotEmpty &&
+                                            waktuMulaSlaStr.length >= 19) {
+                                          int year = int.parse(
+                                              waktuMulaSlaStr.substring(0, 4));
+                                          int month = int.parse(
+                                              waktuMulaSlaStr.substring(5, 7));
+                                          int day = int.parse(
+                                              waktuMulaSlaStr.substring(8, 10));
+                                          int hour = int.parse(waktuMulaSlaStr
+                                              .substring(11, 13));
+                                          int minute = int.parse(waktuMulaSlaStr
+                                              .substring(14, 16));
+                                          int second = int.parse(waktuMulaSlaStr
+                                              .substring(17, 19));
+
+                                          waktuMula = DateTime.utc(year, month,
+                                                  day, hour, minute, second)
+                                              .subtract(
+                                                  const Duration(hours: 8));
                                         }
 
-                                        //
                                         waktuMula ??= DateTime.tryParse(
                                                 _ticketData['created_at'] ??
                                                     '') ??

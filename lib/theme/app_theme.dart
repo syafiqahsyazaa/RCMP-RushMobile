@@ -308,20 +308,39 @@ class MicrosoftButton extends StatelessWidget {
 class _MicrosoftLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Simple 4-color square approximation of the Microsoft logo.
+    // Bulletproof 4-color Microsoft logo using fixed SizedBox and ColoredBox.
     return SizedBox(
       width: 16,
       height: 16,
-      child: GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 1,
-        crossAxisSpacing: 1,
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          ColoredBox(color: Color(0xFFF25022)),
-          ColoredBox(color: Color(0xFF7FBA00)),
-          ColoredBox(color: Color(0xFF00A4EF)),
-          ColoredBox(color: Color(0xFFFFB900)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              SizedBox(
+                  width: 7,
+                  height: 7,
+                  child: ColoredBox(color: Color(0xFFF25022))),
+              SizedBox(
+                  width: 7,
+                  height: 7,
+                  child: ColoredBox(color: Color(0xFF7FBA00))),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              SizedBox(
+                  width: 7,
+                  height: 7,
+                  child: ColoredBox(color: Color(0xFF00A4EF))),
+              SizedBox(
+                  width: 7,
+                  height: 7,
+                  child: ColoredBox(color: Color(0xFFFFB900))),
+            ],
+          ),
         ],
       ),
     );
@@ -355,7 +374,7 @@ class RealSSOButton extends StatelessWidget {
           padding:
               width == null ? const EdgeInsets.symmetric(horizontal: 24) : null,
         ),
-        child:  Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _MicrosoftLogo(),

@@ -236,7 +236,7 @@ class _HodReportsScreenState extends State<HodReportsScreen> {
                                     {"label": "MOHD", "value": 4},
                                     {"label": "TUN", "value": 3}
                                   ]),
-                              barColor: const Color(0xFF2F5FA3)),
+                              barColor: const Color(0xFF32D55B)),
                         ),
                         const SizedBox(height: 18),
 
@@ -401,17 +401,17 @@ class _HodReportsScreenState extends State<HodReportsScreen> {
         List<Color> gradColors = [barColor.withOpacity(0.7), barColor];
 
         if (item['label'] == 'Open')
-          gradColors = [const Color(0xFF60A5FA), const Color(0xFF1D4ED8)];
+          gradColors = [const Color(0xFF33C7FF), const Color(0xFF15D4FF)];
         if (item['label'] == 'In Progress')
-          gradColors = [const Color(0xFFFBBF24), const Color(0xFFD97706)];
+          gradColors = [const Color(0xFFFBBF24), const Color(0xFFFFC733)];
         if (item['label'] == 'Closed')
-          gradColors = [const Color(0xFF34D399), const Color(0xFF047857)];
+          gradColors = [const Color(0xFF15FF74), const Color(0xFF33FF67)];
         if (item['label'] == 'High')
-          gradColors = [const Color(0xFFF87171), const Color(0xFFDC2626)];
+          gradColors = [const Color(0xFFF87171), const Color(0xFFE62929)];
         if (item['label'] == 'Medium')
-          gradColors = [const Color(0xFFFB923C), const Color(0xFFEA580C)];
+          gradColors = [const Color(0xFFFFC615), const Color(0xFFFFC733)];
         if (item['label'] == 'Low')
-          gradColors = [const Color(0xFF93C5FD), const Color(0xFF2563EB)];
+          gradColors = [const Color(0xFF93C5FD), const Color(0xFF71C1F6)];
 
         return Column(
           children: [
@@ -498,7 +498,7 @@ class _HodReportsScreenState extends State<HodReportsScreen> {
                       value: ratio,
                       backgroundColor: AppColors.pageBackground,
                       valueColor:
-                          const AlwaysStoppedAnimation(Color(0xFF2E9E52)),
+                          const AlwaysStoppedAnimation(Color(0xFF32D557)),
                       minHeight: 7)),
             ],
           ),
@@ -569,7 +569,7 @@ class _HodReportsScreenState extends State<HodReportsScreen> {
                               value: rowRatio,
                               backgroundColor: AppColors.pageBackground,
                               valueColor: const AlwaysStoppedAnimation(
-                                  Color(0xFFC9A227)),
+                                  Color(0xFFFFC615)),
                               minHeight: 5))),
                   const SizedBox(width: 8),
                   SizedBox(

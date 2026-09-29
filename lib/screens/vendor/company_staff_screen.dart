@@ -186,8 +186,7 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
                       }));
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       backgroundColor: Colors.green,
-                      content: Text(
-                          'New sub-staff crew injected successfully! 🚀')));
+                      content: Text('New sub-staff crew successfully added.')));
                   _tarikSenaraiStaffDariDatabase();
                 } catch (e) {
                   print(e);
@@ -261,8 +260,8 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
                       }));
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       backgroundColor: Colors.green,
-                      content: Text(
-                          'Staff deployment data updated successfully! 🚀')));
+                      content:
+                          Text('Staff deployment data successfully updated.')));
                   _tarikSenaraiStaffDariDatabase();
                 } catch (e) {
                   print(e);

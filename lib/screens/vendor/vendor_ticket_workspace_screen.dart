@@ -330,8 +330,7 @@ class _VendorTicketWorkspaceScreenState
         if (hasil['status'] == 'berjaya') {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               backgroundColor: Colors.green,
-              content: Text(
-                  'All actions persistent into Laragon database successfully! 🚀')));
+              content: Text('All actions updated successfully.')));
           setState(() {
             _remarksMessageController.clear();
             _ticketData['handled_by_vendor_staff_id'] = finalStaffIdToSave;

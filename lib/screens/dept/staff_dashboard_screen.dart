@@ -54,9 +54,9 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
 
   // Warna standard yang kita tetapkan untuk 3 pecahan carta donat
   final List<Color> _chartColors = [
-    const Color(0xFF7C3AED),
-    const Color(0xFF2F5FA3),
-    const Color(0xFF2E9E52)
+    const Color(0xFFDE1C00),
+    const Color(0xFF0076C3),
+    const Color(0xFF00C337)
   ];
 
   @override

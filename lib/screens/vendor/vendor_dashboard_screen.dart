@@ -79,8 +79,9 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
             showProfileSetupDialog(
               context: context,
               vendorData: _vendorData,
-              onProfileFinalized: () {
+              onProfileFinalized: (updatedData) {
                 setState(() {
+                  _vendorData = updatedData;
                   _vendorData['first_login'] = 0;
                 });
                 _tarikTiketVendorLive(); // Refresh murni
@@ -836,13 +837,15 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
           showProfileSetupDialog(
             context: context,
             vendorData: _vendorData,
-            onProfileFinalized: () {
+            onProfileFinalized: (updatedData) {
+              setState(() {
+                _vendorData = updatedData;
+              });
               _tarikTiketVendorLive();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     backgroundColor: Colors.green,
-                    content: Text(
-                        'Company configurations successfully updated live! 🚀')),
+                    content: Text('Company profile successfully updated.')),
               );
             },
           );
@@ -910,8 +913,8 @@ class VendorBottomNav extends StatelessWidget {
                   currentIndex == 0, () => onTabSelected(0)),
               _buildNavItem(1, Icons.people_outline, 'Staff Crew',
                   currentIndex == 1, () => onTabSelected(1)),
-              _buildNavItem(2, Icons.business_center_outlined, 'Profile',
-                  false, onProfileTap),
+              _buildNavItem(2, Icons.business_center_outlined, 'Profile', false,
+                  onProfileTap),
               _buildNavItem(
                   3, Icons.logout_rounded, 'Logout', false, onLogoutTap,
                   isLogout: true),
